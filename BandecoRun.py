@@ -1,7 +1,4 @@
 from random import randint
-from re import X
-from turtle import width
-from PPlay import sprite
 from PPlay.window import *
 from PPlay.gameimage import *
 from PPlay.sprite import *
@@ -29,12 +26,10 @@ moedas = [Sprite("moeda.png", 1)]
 
 ## INTERFACE
 
-## CRIAR INTERFACE NUMA FUNÇÃO SEPARADA, EM OUTRO ARQUIVO TAMBÉM
-interface = InterfaceSet(in_game)
+Interface = InterfaceSet(in_game)
 
 vEntitie = 250  #velocidade das entidades
 
-##Posições iniciais dos primeiros objetos gerados
 
 ## Gerador de estudantes:
 EntitieGenerator(estudante_vet, 4, in_game.height-332, randint(in_game.width/2,740))
@@ -42,11 +37,12 @@ EntitieGenerator(estudante_vet, 4, in_game.height-332, randint(in_game.width/2,7
 ## Gerador de veiculos em exatamente duas faixas:
 VehicleGenerator(veiculos_vet, randint(1,4), 0)
 
-## CENARIO
+## CENARIO INICIAL
 
 fundo_vet[0].y = 0
 fundo_vet[1].y = -fundo_vet[1].height
 fundo_vet[2].y = -2 * fundo_vet[1].height
+
 
 ## G A M E    L O O P
 
@@ -57,15 +53,8 @@ while True:
         jogador.x -= vEntitie * 2 * in_game.delta_time()
     if teclado.key_pressed("RIGHT") and jogador.x < 740:
         jogador.x += vEntitie * 2 * in_game.delta_time()
-    #if teclado.key_pressed("UP") and jogador.y > 0:
-    #    jogador.y -= vEntitie * in_game.delta_time()
-    #if teclado.key_pressed("DOWN") and jogador.y < 600-jogador.height:
-    #    jogador.y += vEntitie * in_game.delta_time()
-
 
 ###### DRAW #######
-
-## INTERFACE
 
 ## CENARIO
 
@@ -78,9 +67,10 @@ while True:
 ## ENTIDADES
 
     jogador.draw()
+
     EntitieDrawer(estudante_vet, randint(0,5), in_game.height, -200, randint(in_game.width/2, 740))
-    VehicleDrawer(veiculos_vet, randint(1,4), in_game.height, -800)
     EntitieDrawer(moedas, 1, in_game.height, -randint(100,500),randint(0, 740))
+    VehicleDrawer(veiculos_vet, randint(1,4), in_game.height, -800)
 
 
 ## MOVIMENTAÇÃO DOS OBJETOS
@@ -93,5 +83,9 @@ while True:
 
     for moeda in moedas:
         moeda.y += vEntitie * in_game.delta_time()
+
+## INTERFACE
+
+    InterfaceDraw(Interface)
 
     in_game.update()

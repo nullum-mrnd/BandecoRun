@@ -3,6 +3,7 @@ from random import randint
 from re import X
 from turtle import width
 from PPlay import sprite
+from PPlay.collision import Collision
 from PPlay.window import *
 from PPlay.sprite import *
 
@@ -15,16 +16,17 @@ def EntitieGenerator(objetos, frames, pos_inicial, area):
         objeto.set_curr_frame(frames)
         objeto.x = area
         objeto.y = pos_inicial
-        pos_inicial -= 168
+        pos_inicial -= 200
+
 
 #### Desenho das entidades:
 
-def EntitieDrawer(objetos, frames, limite, nova_pos_inicial, area):
+def EntitieDrawer(objetos, frames, limite, pos_inicial, area):
     for objeto in objetos:
         if objeto.y > limite:
             objeto.x = area
             objeto.set_curr_frame(frames)
-            objeto.y = nova_pos_inicial
+            objeto.y = pos_inicial
         objeto.draw()
 
 ## VEICULOS:
