@@ -23,9 +23,9 @@ jogador.y = in_game.height/1.1 - jogador.height/2
 
 ## OBJETOS:
 
-estudante_vet = [Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5)]
-veiculos_vet = [Sprite("Sprites/GAME/veiculos.png",5),Sprite("Sprites/GAME/veiculos.png",5),Sprite("Sprites/GAME/veiculos.png",5),Sprite("Sprites/GAME/veiculos.png",5),Sprite("Sprites/GAME/veiculos.png",5)]
-moedas_vet = [Sprite("Sprites/moeda.png", 1), Sprite("Sprites/moeda.png", 1)]
+estudantes = [Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5)]
+veiculos = [Sprite("Sprites/GAME/veiculos.png",5),Sprite("Sprites/GAME/veiculos.png",5),Sprite("Sprites/GAME/veiculos.png",5),Sprite("Sprites/GAME/veiculos.png",5),Sprite("Sprites/GAME/veiculos.png",5)]
+moedas = [Sprite("Sprites/moeda.png", 1), Sprite("Sprites/moeda.png", 1)]
 
 ## INTERFACE
 
@@ -38,12 +38,16 @@ cont1 = 0; cont2 = 0; cont3 = 0; cont4 = 0; cont5 = 0
 
 vEntitie = 250  #velocidade das entidades
 
+#PREDIOS
+
+predios = [Sprite("Sprites/GAME/predios.png",5), Sprite("Sprites/GAME/predios.png",5), Sprite("Sprites/GAME/predios.png",5), Sprite("Sprites/GAME/predios.png",5), Sprite("Sprites/GAME/predios.png",5), Sprite("Sprites/GAME/predios.png",5)]
+EntitieGenerator(predios, randint(0,4), in_game.height, randint(760, 850))
 
 ## Gerador de estudantes:
-EntitieGenerator(estudante_vet, 4, in_game.height-332, randint(in_game.width/2,740))
+EntitieGenerator(estudantes, 4, in_game.height-332, randint(in_game.width/2,740))
 
 ## Gerador de veiculos em exatamente duas faixas:
-VehicleGenerator(veiculos_vet, randint(1,4), 0)
+VehicleGenerator(veiculos, randint(1,4), 0)
 
 ## CENARIO INICIAL
 
@@ -52,6 +56,15 @@ fundo_vet[1].y = -fundo_vet[1].height
 fundo_vet[2].y = -2 * fundo_vet[1].height
 
 
+# RELOGIO
+
+relogio = CriaRelogio(in_game)
+dez_seg = 2
+uni_seg = 9
+minutos = 0
+tempo = 10
+
+prox = 0
 ## G A M E    L O O P
 
 while True:
@@ -74,51 +87,88 @@ while True:
     # ----------- TELA JOGO -----------
 
     elif game_status == 1:
-        ## Movimento do player
-        if teclado.key_pressed("LEFT") and jogador.x > 0:
-                jogador.x -= vEntitie * 2 * in_game.delta_time()
-        if teclado.key_pressed("RIGHT") and jogador.x < 740:
-                jogador.x += vEntitie * 2 * in_game.delta_time()
+        if int(tempo) != 0:
+            ## Movimento do player
+            if teclado.key_pressed("LEFT") and jogador.x > 0:
+                    jogador.x -= vEntitie * 2 * in_game.delta_time()
+            if teclado.key_pressed("RIGHT") and jogador.x < 720:
+                    jogador.x += vEntitie * 2 * in_game.delta_time()
 
-        ###### DRAW #######
+            ###### DRAW #######
 
-        ## CENARIO
+            ## CENARIO
 
-        for fundo in fundo_vet:
-            fundo.y += vEntitie * in_game.delta_time()
-            if fundo.y > 600:
-                fundo.y = -2 * fundo.height
-            fundo.draw()
+            for fundo in fundo_vet:
+                fundo.y += vEntitie * in_game.delta_time()
+                if fundo.y > 600:
+                    fundo.y = -2 * fundo.height
+                fundo.draw()
 
-        ## ENTIDADES
+            ## ENTIDADES
 
-        jogador.draw()
+            jogador.draw()
 
-        EntitieDrawer(estudante_vet, randint(0,5), in_game.height, -200, randint(in_game.width/2, 740))
-        EntitieDrawer(moedas_vet, randint(0,5), in_game.height, -randint(100,500),randint(0, 740))
-        VehicleDrawer(veiculos_vet, randint(1,4), in_game.height, -800)
+            EntitieDrawer(estudantes, randint(0,5), in_game.height, -200, randint(in_game.width/2, 740))
+            EntitieDrawer(moedas, randint(0,5), in_game.height, -randint(100,500),randint(0, 740))
+            VehicleDrawer(veiculos, randint(1,4), in_game.height, -800)
+            BuildingDrawer(predios, randint(0,4), in_game.height, -predios[0].height, randint(760,900))
+
+            ## MOVIMENTAÇÃO DOS OBJETOS
+
+            for estudante in estudantes:
+                estudante.y += vEntitie * in_game.delta_time()
+
+            for veiculo in veiculos:
+                veiculo.y += vEntitie* 2 * in_game.delta_time()
+
+            for moeda in moedas:
+                moeda.y += vEntitie * in_game.delta_time()
+            
+            for predio in predios:
+                predio.y += vEntitie * in_game.delta_time()
+
+            ## INTERFACE
+            InterfaceDraw(Interface_jogo)
 
 
-        ## MOVIMENTAÇÃO DOS OBJETOS
+            ## RELOGIO
+            tempo -= 1 * in_game.delta_time()
+            uni_seg -= 1 * in_game.delta_time()
+            for num in relogio:
+                num.draw()
+            relogio[0].set_curr_frame(int(uni_seg))
+            relogio[1].set_curr_frame(dez_seg)
+            relogio[3].set_curr_frame(minutos)
+            
+            if uni_seg < 0:
+                dez_seg -= 1
+                uni_seg = 10
+                
+            if dez_seg < 0:
+                minutos -= 1
+                dez_seg = 5
 
-        for estudante in estudante_vet:
-            estudante.y += vEntitie * in_game.delta_time()
+    ## FINAL DO JOGO
+    if int(tempo) == 0 and prox == 0 and game_status == 1:            
+        interface_vit = InterfaceVitoria(in_game)
+        InterfaceDraw(interface_vit)
+        if(click.is_over_object(interface_vit[2]) == True ) and (click.is_button_pressed(1)):
+            prox = 1
 
-        for veiculo in veiculos_vet:
-            veiculo.y += vEntitie* 2 * in_game.delta_time()
+    if int(tempo) == 0 and prox == 1 and game_status == 1:
+        final = Final_da_fase(in_game)
+        InterfaceDraw(final)
+        if(click.is_over_object(final[3]) == True ) and (click.is_button_pressed(1)) and prox == 1:
+            print("debug")
+            game_status = 0
 
-        for moeda in moedas_vet:
-            moeda.y += vEntitie * in_game.delta_time()
-
-        ## INTERFACE
-        InterfaceDraw(Interface_jogo)
-
+        
         #CONTROLE DE SAIDA
-        if (teclado.key_pressed("ESC") == 1): 
-            InterfaceDraw(Interface_saida)
-            if(click.is_over_object(Interface_saida[1]) == True ) and (click.is_button_pressed(1)):
-                game_status = 0
-                    
+    if (teclado.key_pressed("ESC") == 1): 
+        InterfaceDraw(Interface_saida)
+        if(click.is_over_object(Interface_saida[1]) == True ) and (click.is_button_pressed(1)):
+            game_status = 0
+
 
     elif game_status == 2:
         Interface_num_loja = InterfaceNumLoja(in_game, 0 + cont1, 0 + cont2, 0 + cont3, 0 + cont4, 0 + cont5)
