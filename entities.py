@@ -63,3 +63,44 @@ def VehicleDrawer(veiculos, frames, limite, nova_pos_inicial):
             veiculo.set_curr_frame(frames)
             veiculo.y = nova_pos_inicial
         veiculo.draw()
+
+# moedas, estudantes, carros, onibus, poça
+#   1          2         3       4     5
+
+# lista_contadores[0] -> Pontos de resistência
+# lista_contadores[1] -> Moedas
+# lista_contadores[2] -> Lentidão?
+def GameObjectsPhysics(jogador, colisor, tipo, lista_contadores, janela, ultimo_colidido):
+    index_colisor = ""
+    if type(colisor) is list:
+        for objeto in colisor:
+                if tipo == 1:   # MOEDA
+                    if Collision.collided_perfect(jogador, objeto):
+                        ultimo_colidido = colisor.index(objeto)
+                        lista_contadores[1] += 1
+                        print("moedas:")
+                        print(lista_contadores[1])
+                elif tipo == 2: # ESTUDANTE
+                    if Collision.collided_perfect(jogador, objeto) and colisor.index(objeto) != ultimo_colidido[0]:
+                            lista_contadores[0] -= 1
+                            print("vida:")
+                            print(lista_contadores[0])
+                            print(ultimo_colidido)
+                            print(colisor.index(objeto))
+                            ultimo_colidido[0] = colisor.index(objeto)
+                elif tipo == 3:
+                    if Collision.collided_perfect(jogador, objeto):
+                        index_colisor = colisor.index(objeto)
+                        lista_contadores[0] -= 2
+                        print("vida:")
+                        print(lista_contadores[0])
+                # elif tipo == 4:
+                #     if Collision.collided_perfect(jogador, objeto):
+                #         index_colisor = colisor.index(objeto)
+                #         lista_contadores[0] -= 3
+                # elif tipo == 5:
+                #     if Collision.collided_perfect(jogador, objeto):
+                #         index_colisor = colisor.index(objeto)
+                #         lista_contadores[2] = 1
+
+    return [lista_contadores, ultimo_colidido]

@@ -21,6 +21,8 @@ jogador = Sprite("Sprites/GAME/jogador.png", 1)
 jogador.x = in_game.width/2
 jogador.y = in_game.height/1.1 - jogador.height/2
 
+lista_contadores = [3,0,0]
+
 ## OBJETOS:
 
 estudantes = [Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5)]
@@ -65,6 +67,9 @@ minutos = 0
 tempo = 10
 
 prox = 0
+
+ultimo_colidido = ["", "", ""]
+
 ## G A M E    L O O P
 
 while True:
@@ -109,8 +114,14 @@ while True:
             jogador.draw()
 
             EntitieDrawer(estudantes, randint(0,5), in_game.height, -200, randint(in_game.width/2, 740))
-            EntitieDrawer(moedas, randint(0,5), in_game.height, -randint(100,500),randint(0, 740))
-            VehicleDrawer(veiculos, randint(1,4), in_game.height, -800)
+            fisica = GameObjectsPhysics(jogador, estudantes, 2, lista_contadores, in_game, ultimo_colidido)
+            lista_contadores = fisica[0]
+            ultimo_colidido = fisica[1]
+            #EntitieDrawer(moedas, randint(0,5), in_game.height, -randint(100,500),randint(0, 740))
+            #GameObjectsPhysics(jogador, moedas, 1, lista_contadores )
+            #VehicleDrawer(veiculos, randint(1,4), in_game.height, -800)
+            #GameObjectsPhysics(jogador, veiculos, 3, lista_contadores)
+            
             BuildingDrawer(predios, randint(0,4), in_game.height, -predios[0].height, randint(760,900))
 
             ## MOVIMENTAÇÃO DOS OBJETOS
