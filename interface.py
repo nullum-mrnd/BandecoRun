@@ -10,15 +10,25 @@ def SetObjeto(sprite, pos_x, pos_y):
 
 def InterfaceSet(window):
     #relogio = SetObjeto(["Sprites/GAME/relógio.png",1], window.width/2, window.height/20)
-    resist = SetObjeto(["Sprites/GAME/ponto_de_resistencia.png", 1], window.width/40, window.height/20)
-    power = SetObjeto(["Sprites/GAME/power.png", 1], window.width/30, window.height/1.1)
-    qnt_moeda = SetObjeto(["Sprites/GAME/quantidade_moeda.png", 1], window.width/1.04, window.height/1.1)
-    moeda_icon = SetObjeto(["Sprites/GAME/moeda.png", 1], window.width/1.1, window.height/1.1)
-    pontos = SetObjeto(["Sprites/GAME/pontos.png", 1], window.width/1.15, window.height/20)
-    
+    resist1 = SetObjeto(["Sprites/GAME/ponto_de_resistencia.png", 1], window.width/40, window.height/20)
+    resist2 = SetObjeto(["Sprites/GAME/ponto_de_resistencia.png", 1], resist1.width + 20, window.height/20)
+    resist3 = SetObjeto(["Sprites/GAME/ponto_de_resistencia.png", 1], resist2.width + 63, window.height/20)
+    janela1 = SetObjeto(["Sprites/LOJA/icones.png", 1], window.width/30 + 15, window.height/1.07)
+    janela2 = SetObjeto(["Sprites/LOJA/icones.png", 1], window.width/30 + 103, window.height/1.07)
+    moeda_icon = SetObjeto(["Sprites/GAME/moeda.png", 1], window.width/1.1, window.height/1.05)
 
-    Interface = [   resist, power, qnt_moeda, moeda_icon, pontos]
+    Interface = [resist1, resist2, resist3, janela1, janela2, moeda_icon]
 
+    return Interface
+
+def InterfaceNumGame(window, frame1, frame2, frame3):
+    num_janela1 = SetObjeto(["Sprites/LOJA/numero_pequeno.png", 10], window.width/30 + 14.5, window.height/1.07 + 25)
+    num_janela1.set_curr_frame(frame1)
+    num_janela2 = SetObjeto(["Sprites/LOJA/numero_pequeno.png", 10], window.width/30 + 102.5, window.height/ 1.07 + 25)
+    num_janela2.set_curr_frame(frame2)
+    num_moeda = SetObjeto(["Sprites/GAME/numero.png", 10], window.width/1.04 + 10, window.height/ 1.05)
+    num_moeda.set_curr_frame(frame3)
+    Interface = [ num_janela1, num_janela2, num_moeda]
     return Interface
 
 def InterfaceSair(window):
@@ -91,20 +101,48 @@ def CriaRelogio(window):
     relogio[2].x = window.width/2 - relogio[2].width/2 - 2
     relogio[2].y = 25
 
-    relogio[3].x = relogio[1].x - 45
+    relogio[3].x = relogio[1].x - 50
     relogio[4].x = relogio[3].x - 40
     return relogio
 
 def InterfaceVitoria(window):
-    #fade = SetObjeto(["Sprites/MENU/fade_bordas.png",1], 0, 0)
+    fade = Sprite("Sprites/MENU/fade_bordas.png",1)
     vitoria = SetObjeto(["Sprites/GAME/vitoria.png",1], window.width/2, 50)
     vitoria_text = SetObjeto(["Sprites/GAME/texto_vitoria1.png",1], window.width/2, 350)
     proximo = SetObjeto(["Sprites/GAME/proximo.png",1], window.width/2, 550)
-    return [vitoria, vitoria_text, proximo]
+    return [fade, vitoria, vitoria_text, proximo]
+
+def InterfaceDerrota(window):
+    fade = Sprite("Sprites/MENU/fade_bordas.png",1)
+    derrota = SetObjeto(["Sprites/GAME/derrota.png",1], window.width/2, 50)
+    derrota_text = SetObjeto(["Sprites/GAME/texto_derrota.png",1], window.width/2, 350)
+    proximo = SetObjeto(["Sprites/GAME/proximo.png",1], window.width/2, 550)
+    
+    return [fade, derrota, derrota_text, proximo]
 
 def Final_da_fase(window):
+
     fase = SetObjeto(["Sprites/GAME/fase.png",1], window.width/2, 200)
     pontuacao = SetObjeto(["Sprites/GAME/sua_pontuacao.png",1], window.width/4, 300)
     moedas = SetObjeto(["Sprites/GAME/moedas_recolhidas.png",1], 3*(window.width/4), 300)
-    menu_botao = SetObjeto(["Sprites/GAME/menu_principal.png",1], window.width/2, 550)
+    menu_botao = SetObjeto(["Sprites/GAME/menu_principal.png",1], window.width/2, 500)
     return [fase, pontuacao, moedas, menu_botao]
+
+def CriaPontos(window):
+    pontos = [Sprite("Sprites/GAME/numero.png",10), Sprite("Sprites/GAME/numero.png",10), Sprite("Sprites/GAME/numero.png",10), Sprite("Sprites/GAME/numero.png",10), Sprite("Sprites/GAME/numero.png",10), Sprite("Sprites/GAME/numero.png",10)]
+    pontos[0].x = window.width - pontos[0].width
+    pontos[1].x = pontos[0].x - 40
+    pontos[2].x = pontos[1].x - 40
+    pontos[3].x = pontos[2].x - 40
+    pontos[4].x = pontos[3].x - 40
+    pontos[5].x = pontos[4].x - 40
+
+    return pontos
+
+def Pausa (window):
+    fade = Sprite("Sprites/MENU/fade_bordas.png",1)
+    pause_titulo = SetObjeto(["Sprites/GAME/pause.png",1], window.width/2, 50)
+    continuar_botao = SetObjeto(["Sprites/GAME/continuar.png",1], window.width/2, 300)
+    menu_botao = SetObjeto(["Sprites/GAME/menu_principal.png",1], window.width/2, 350)
+    
+    return [fade, pause_titulo, continuar_botao, menu_botao]
