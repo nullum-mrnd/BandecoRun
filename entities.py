@@ -2,7 +2,6 @@ from random import randint
 from PPlay.collision import *
 from PPlay.window import *
 from PPlay.sprite import *
-from interface import *
 
 ## ENTIDADES:
 
@@ -40,9 +39,9 @@ def BuildingGenerator(objetos, frames, pos_inicial, area):
         objeto.y = pos_inicial
         pos_inicial -= 200
 
-def BuildingDrawer(predios, frames, limite, pos_inicial, area):
+def BuildingDrawer(predios, frames, limite, pos_inicial, area, tempo):
     for i in range (5,0,-1):
-        if predios[i].y > limite:
+        if predios[i].y > limite and tempo >=12:
             predios[i].x = area
             predios[i].set_curr_frame(frames)
             predios[i].y = pos_inicial

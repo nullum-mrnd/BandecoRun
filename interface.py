@@ -9,7 +9,6 @@ def SetObjeto(sprite, pos_x, pos_y):
     return objeto
 
 def InterfaceSet(window):
-    #relogio = SetObjeto(["Sprites/GAME/relógio.png",1], window.width/2, window.height/20)
     resist1 = SetObjeto(["Sprites/GAME/ponto_de_resistencia.png", 1], window.width/40, window.height/20)
     resist2 = SetObjeto(["Sprites/GAME/ponto_de_resistencia.png", 1], resist1.width + 20, window.height/20)
     resist3 = SetObjeto(["Sprites/GAME/ponto_de_resistencia.png", 1], resist2.width + 63, window.height/20)
