@@ -23,12 +23,19 @@ def EntitieGenerator(objetos, frames, y_inicial, x1, x2, delay):
 
 #### Desenho das entidades:
 
-def EntitieDrawer(objetos, frames, y_inicial, x1, x2, limite):
+def EntitieDrawer(objetos, frames, y_inicial, x1, x2, limite, parada):
     for objeto in objetos:
         if objeto.y > limite:
             objeto.set_curr_frame(randint (0, frames))
-            objeto.x = randint(x1,x2)
-            objeto.y = y_inicial
+            if parada > -300:
+                x3 = 280
+                x4 = 740
+                objeto.x = randint(x3,x4)
+            elif parada < 0:
+                objeto.x = randint(x1,x2)
+            if parada < 400:
+                objeto.y = y_inicial
+
         objeto.draw()      
 
 
@@ -53,7 +60,7 @@ def BuildingDrawer(predios, frames, limite, pos_inicial, area, tempo):
 
 def VehicleGenerator(veiculos, frames, pos_inicial):
     for veiculo in veiculos:
-        veiculo.set_curr_frame(frames)
+        veiculo.set_curr_frame(randint(1, frames ))
         aux = randint(1,2)
         if aux == 1:
             veiculo.x = -10
@@ -64,7 +71,7 @@ def VehicleGenerator(veiculos, frames, pos_inicial):
 
 #### Desenho dos veículos:
 
-def VehicleDrawer(veiculos, frames, limite, nova_pos_inicial):
+def VehicleDrawer(veiculos, frames, limite, nova_pos_inicial, parada):
     for veiculo in veiculos:
         if veiculo.y > limite:
             aux = randint(1,3)
@@ -75,7 +82,8 @@ def VehicleDrawer(veiculos, frames, limite, nova_pos_inicial):
             if aux == 3:
                 veiculo.x = veiculo.width +80
             veiculo.set_curr_frame(frames)
-            veiculo.y = nova_pos_inicial
+            if parada < -799: 
+                veiculo.y = nova_pos_inicial
         veiculo.draw()
 
 

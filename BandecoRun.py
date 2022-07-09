@@ -30,7 +30,7 @@ vPlayer = 250
 
 
 ## PLAYER
-jogador = Sprite("Sprites/GAME/jogador.png", 1)
+jogador = Sprite("Sprites/GAME/jogador.png", 2)
 jogador.x = in_game.width/2
 jogador.y = in_game.height/1.1 - jogador.height/2
 lista_contadores = [3,0,3]
@@ -52,21 +52,13 @@ count1_1 = 0; count1_2 = 0;count1_3 = 0
 predios = [Sprite("Sprites/GAME/predios.png",5), Sprite("Sprites/GAME/predios.png",5), Sprite("Sprites/GAME/predios.png",5), Sprite("Sprites/GAME/predios.png",5), Sprite("Sprites/GAME/predios.png",5), Sprite("Sprites/GAME/predios.png",5)]
 BuildingGenerator(predios, randint(0,4), in_game.height, randint(760, 850))
 estudantes = [Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5)]  
-EntitieGenerator(estudantes, 4, 0, in_game.width/2, 740, 1)
+EntitieGenerator(estudantes, 4, -200, in_game.width/2, 740, 1)
 moedas = [Sprite("Sprites/moeda.png", 1), Sprite("Sprites/moeda.png", 1)]
-EntitieGenerator(moedas, 1, randint(100,600), 100, 500, 10)
+EntitieGenerator(moedas, 1, - randint(100,600), 100, 500, 10)
 veiculos = [Sprite("Sprites/GAME/veiculos.png",5),Sprite("Sprites/GAME/veiculos.png",5),Sprite("Sprites/GAME/veiculos.png",5),Sprite("Sprites/GAME/veiculos.png",5),Sprite("Sprites/GAME/veiculos.png",5)]
-VehicleGenerator(veiculos, 4 , 100)
+VehicleGenerator(veiculos, 4 , -500)
 
 ## CENARIO INICIAL
-fundo_vet[0].y = 0
-fundo_vet[1].y = -600
-fundo_vet[2].y = -2 * 600
-
-fundo_pv[0].y = -600
-fundo_pv[1].y = -1200
-fundo_pv[2].y = -1800
-
 bandejao_pv = Sprite("Sprites/GAME/bandejao_pv.png",1)
 bandejao_pv.x = 1000 - bandejao_pv.width
 fundo_pv[0].set_curr_frame(0)
@@ -84,13 +76,23 @@ etapa_final_fase = 0
 
 ## G A M E    L O O P
 while True:
-
+    
     # ----------- TELA MENU -----------
     if game_status == 0:
         perdeu = 0
         venceu = 0
         etapa_final_fase = 0
         vEntitie = 250
+        jogador.x = in_game.width/2
+        jogador.y = in_game.height/1.1 - jogador.height/2
+        fundo_vet[0].y = 0
+        fundo_vet[1].y = -600
+        fundo_vet[2].y = -2 * 600
+
+        fundo_pv[0].y = -800
+        fundo_pv[1].y = -1200
+        fundo_pv[2].y = -1800
+
         InterfaceDraw(fundos)
         InterfaceDraw(Interface_menu)
 
@@ -130,6 +132,7 @@ while True:
             if jogador.y > 200:
                 jogador.move_y(-150*in_game.delta_time())
             if jogador.y <= 200 and jogador.x < 750:
+                jogador.set_curr_frame(1)
                 jogador.move_x(150*in_game.delta_time())
             if jogador.y <= 200 and jogador.x >= 750:
                 venceu = 1
@@ -172,31 +175,31 @@ while True:
             
             if etapa_final_fase == 0:
                 ## ESTUDANTES
-                EntitieDrawer(estudantes, 4, -200, in_game.width/2, 740, in_game.height)
+                EntitieDrawer(estudantes, 4, -200, in_game.width/2, 740, in_game.height, fundo_pv[0].y)
                 #GameObjectsPhysics(jogador, estudantes, 2, lista_contadores, ultimo_colidido, Interface_jogo, moedas)
                 for estudante in estudantes:
                     estudante.y += vEntitie * in_game.delta_time()
-                if int(tempo) > 8:
-                    ## MOEDAS
-                    EntitieDrawer(moedas, 1, -200, 100 , 500, in_game.height)
-                    GameObjectsPhysics(jogador, moedas, 1, lista_contadores, ultimo_colidido, Interface_jogo, moedas)
-                    for moeda in moedas:
-                        moeda.y += vEntitie * in_game.delta_time()
-                
-                    ## VEICULOS
-                    VehicleDrawer(veiculos, randint(1,4), in_game.height, -800)
-                    #GameObjectsPhysics(jogador, veiculos, 3, lista_contadores, ultimo_colidido, Interface_jogo, moedas)
-                    for veiculo in veiculos:
-                        veiculo.y += vEntitie* 2 * in_game.delta_time()
-                
-                    ## PREDIOS
-                    BuildingDrawer(predios, randint(0,4), in_game.height, -predios[0].height, randint(760,900))
-                    for predio in predios:
-                        predio.y += vEntitie * in_game.delta_time()
+                #if int(tempo) > 8:
+                ## MOEDAS
+                EntitieDrawer(moedas, 1, -200, 100 , 740, in_game.height,fundo_pv[0].y)
+                GameObjectsPhysics(jogador, moedas, 1, lista_contadores, ultimo_colidido, Interface_jogo, moedas)
+                for moeda in moedas:
+                    moeda.y += vEntitie * in_game.delta_time()
+            
+                ## VEICULOS
+                VehicleDrawer(veiculos, randint(1,4), in_game.height, -500, fundo_pv[0].y)
+                #GameObjectsPhysics(jogador, veiculos, 3, lista_contadores, ultimo_colidido, Interface_jogo, moedas)
+                for veiculo in veiculos:
+                    veiculo.y += vEntitie* 2 * in_game.delta_time()
+            
+                ## PREDIOS
+                BuildingDrawer(predios, randint(0,4), in_game.height, -predios[0].height, randint(760,900), tempo)
+                for predio in predios:
+                    predio.y += vEntitie * in_game.delta_time()
 
 
                 ## INTERFACE
-                print(fundo_pv[0].y)
+                #print(fundo_pv[0].y)
                 if lista_contadores[0] > 0:
                     InterfaceDraw(Interface_jogo)
                 else:
@@ -279,7 +282,6 @@ while True:
             InterfaceDraw(fundos)
             InterfaceDraw(final)
             if(click.is_over_object(final[3]) == True ) and (click.is_button_pressed(1)) and prox == 1:
-                print("debug")
                 game_status = 0
                 prox = 0
 
