@@ -12,23 +12,27 @@ def InterfaceSet(window):
     resist1 = SetObjeto(["Sprites/GAME/ponto_de_resistencia.png", 1], window.width/40, window.height/20)
     resist2 = SetObjeto(["Sprites/GAME/ponto_de_resistencia.png", 1], resist1.width + 20, window.height/20)
     resist3 = SetObjeto(["Sprites/GAME/ponto_de_resistencia.png", 1], resist2.width + 63, window.height/20)
-    janela1 = SetObjeto(["Sprites/LOJA/icones.png", 1], window.width/30 + 15, window.height/1.07)
-    janela2 = SetObjeto(["Sprites/LOJA/icones.png", 1], window.width/30 + 103, window.height/1.07)
-    moeda_icon = SetObjeto(["Sprites/GAME/moeda.png", 1], window.width/1.1, window.height/1.05)
+    janela1 = SetObjeto(["Sprites/LOJA/sapato.png", 1], window.width/30 + 15, window.height/1.07)
+    janela2 = SetObjeto(["Sprites/LOJA/fantasma.png", 1], window.width/30 + 103, window.height/1.07)
+    moeda_icon = SetObjeto(["Sprites/GAME/moeda.png", 1], 880, window.height/1.05)
 
     Interface = [resist1, resist2, resist3, janela1, janela2, moeda_icon]
 
     return Interface
 
-def InterfaceNumGame(window, frame1, frame2, frame3):
-    num_janela1 = SetObjeto(["Sprites/LOJA/numero_pequeno.png", 10], window.width/30 + 14.5, window.height/1.07 + 25)
+def InterfaceNumGame(window, frame1):
+    num_janela1 = SetObjeto(["Sprites/LOJA/numero_pequeno.png", 10], window.width/30 + 102.5, window.height/ 1.07 + 25)
     num_janela1.set_curr_frame(frame1)
-    num_janela2 = SetObjeto(["Sprites/LOJA/numero_pequeno.png", 10], window.width/30 + 102.5, window.height/ 1.07 + 25)
-    num_janela2.set_curr_frame(frame2)
-    num_moeda = SetObjeto(["Sprites/GAME/numero.png", 10], window.width/1.04 + 10, window.height/ 1.05)
-    num_moeda.set_curr_frame(frame3)
-    Interface = [ num_janela1, num_janela2, num_moeda]
+    Interface = [num_janela1]
     return Interface
+
+def CriaMoedas(pos_x_ini, pos_y):
+    moedas = [Sprite("Sprites/GAME/numero.png",10), Sprite("Sprites/GAME/numero.png",10)]
+    moedas[0].x = pos_x_ini
+    moedas[1].x = moedas[0].x - 40
+    for num in moedas:
+        num.y = pos_y
+    return moedas
 
 def InterfaceSair(window):
     sair = SetObjeto(["Saida.png",1], window.width/2, window.height/2)
@@ -56,26 +60,24 @@ def InterfaceMenu(window):
 
 def InterfaceLoja(window):
     voltar = SetObjeto(["Sprites/LOJA/voltar.png",1], window.width/2, window.height/1.05)
-    janela1 = SetObjeto(["Sprites/LOJA/icones.png", 1], 120, 310)
-    janela2 = SetObjeto(["Sprites/LOJA/icones.png", 1], 220, 310)
-    janela3 = SetObjeto(["Sprites/LOJA/icones.png", 1], 450, 310)
-    janela4 = SetObjeto(["Sprites/LOJA/icones.png", 1], 550, 310)
-    janela5 = SetObjeto(["Sprites/LOJA/icones.png", 1], 840, 310)
+    janela1 = SetObjeto(["Sprites/LOJA/sapato.png", 1], 120, 310)
+    janela2 = SetObjeto(["Sprites/LOJA/galocha.png", 1], 220, 310)
+    janela3 = SetObjeto(["Sprites/LOJA/fantasma.png", 1], 450, 310)
+    #janela4 = SetObjeto(["Sprites/LOJA/icones.png", 1], 550, 310)
+    janela5 = SetObjeto(["Sprites/LOJA/pdr.png", 1], 840, 310)
     loja = SetObjeto(["Sprites/LOJA/loja.png",1], window.width/2, window.height/7)
     sapatos = SetObjeto(["Sprites/LOJA/sapatos_titulo.png",1], 170, 250)
     power_ups = SetObjeto(["Sprites/LOJA/power_ups_titulo.png",1], window.width/2, 250)
     resist = SetObjeto(["Sprites/LOJA/pontos_de_resistencia_titulo.png",1], 840, 240)
 
 
-    Interface = [voltar, janela1, janela2, janela3, janela4, janela5, loja, sapatos, power_ups, resist]
+    Interface = [voltar, janela1, janela2, janela3, janela5, loja, sapatos, power_ups, resist]
 
     return Interface
 
-def InterfaceNumLoja(window, frame1, frame2, frame3, frame4, frame5):
-    num_janela1 = SetObjeto(["Sprites/LOJA/numero_pequeno.png", 10], 120, 337)
-    num_janela1.set_curr_frame(frame1)
-    num_janela2 = SetObjeto(["Sprites/LOJA/numero_pequeno.png", 10], 220, 337)
-    num_janela2.set_curr_frame(frame2)
+def InterfaceNumLoja(frame3, frame4, frame5):
+    check1 = SetObjeto(["Sprites/LOJA/check.png", 1], 120, 337)
+    check2 = SetObjeto(["Sprites/LOJA/check.png", 1], 220, 337)
     num_janela3 = SetObjeto(["Sprites/LOJA/numero_pequeno.png", 10], 450, 337)
     num_janela3.set_curr_frame(frame3)
     num_janela4 = SetObjeto(["Sprites/LOJA/numero_pequeno.png", 10], 550, 337)
@@ -84,7 +86,7 @@ def InterfaceNumLoja(window, frame1, frame2, frame3, frame4, frame5):
     num_janela5.set_curr_frame(frame5)
 
 
-    Interface = [num_janela1, num_janela2, num_janela3, num_janela4, num_janela5]
+    Interface = [check1, check2, num_janela3, num_janela4, num_janela5]
 
     return Interface
 
@@ -127,14 +129,16 @@ def Final_da_fase(window):
     menu_botao = SetObjeto(["Sprites/GAME/menu_principal.png",1], window.width/2, 500)
     return [fase, pontuacao, moedas, menu_botao]
 
-def CriaPontos(window):
+def CriaPontos(pos_x_ini, pos_y):
     pontos = [Sprite("Sprites/GAME/numero.png",10), Sprite("Sprites/GAME/numero.png",10), Sprite("Sprites/GAME/numero.png",10), Sprite("Sprites/GAME/numero.png",10), Sprite("Sprites/GAME/numero.png",10), Sprite("Sprites/GAME/numero.png",10)]
-    pontos[0].x = window.width - pontos[0].width
+    pontos[0].x = pos_x_ini - pontos[0].width
     pontos[1].x = pontos[0].x - 40
     pontos[2].x = pontos[1].x - 40
     pontos[3].x = pontos[2].x - 40
     pontos[4].x = pontos[3].x - 40
     pontos[5].x = pontos[4].x - 40
+    for ponto in pontos:
+        ponto.y = pos_y
 
     return pontos
 
