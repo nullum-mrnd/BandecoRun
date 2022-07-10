@@ -95,7 +95,7 @@ pdrextra = 0
 comprou_sapato = 0
 comprou_galocha = 0
 
-fase = 1
+fase = 2
 
 ## G A M E    L O O P
 while True:
@@ -132,7 +132,7 @@ while True:
                 fundo_pv[1].set_curr_frame(1)
                 fundo_pv[2].set_curr_frame(2)
                 
-                fundo_pv[0].y = -800
+                fundo_pv[0].y = -600
                 fundo_pv[1].y = -1200
                 fundo_pv[2].y = -1800
             ## GRAGOATA
@@ -144,11 +144,11 @@ while True:
                 fundo_grag[1].set_curr_frame(1)
                 fundo_grag[2].set_curr_frame(2)
 
-                fundo_grag[0].y = -800
+                fundo_grag[0].y = -600
                 fundo_grag[1].y = -1200
                 fundo_grag[2].y = -1800
-                arvores_grag.y = -1800
-                bandejao_grag.y = -1800
+                #arvores_grag.y = fundo_grag[2].y
+                bandejao_grag.y = fundo_grag[2].y
 
             
             ## VIDAS
@@ -198,14 +198,19 @@ while True:
                 if fase % 2 == 1:
                     if jogador.y > 200:
                         jogador.move_y(-150*in_game.delta_time())
-                    jogador.set_curr_frame(1)
                     if jogador.y <= 200 and jogador.x < 750:
+                        jogador.set_curr_frame(1)
                         jogador.move_x(150*in_game.delta_time())
                     if jogador.y <= 200 and jogador.x >= 750:
                         venceu = 1
 
-            #elif fase%2 == 0: ## CAMPUS GRAG (AINDA NÃO TEM A ANIMACAO DO GRAGOATA)
-                #venceu = 1
+            elif fase%2 == 0: ## CAMPUS GRAG (AINDA NÃO TEM A ANIMACAO DO GRAGOATA)
+                if jogador.x < 600:
+                    jogador.move_x(-150*in_game.delta_time())
+                elif jogador.x >= 600 and jogador.y < fundo_grag[2].y + 200:
+                    jogador.move_y(-150*in_game.delta_time())
+
+                venceu = 1
 
         if fase%2 == 1:
             if fundo_pv[2].y >= 0:
@@ -224,6 +229,7 @@ while True:
                         fundo.y = -2 * fundo.height
                         fundo.set_curr_frame(randint(0,2))
                 fundo.draw()
+
             if int(tempo) <= 8:
                 if fase%2 == 1:
                     for fundo in fundo_pv:
@@ -235,11 +241,15 @@ while True:
                     for fundo in fundo_grag:
                         if estado_pausa == 0:
                             fundo.y += vEntitie * in_game.delta_time()
-                            bandejao_grag.y = vEntitie * in_game.delta_time()
+                            bandejao_grag.y = fundo_grag[2].y
                             fundo.draw()
-
-            if fundo_pv[2].y >= 0:
-                etapa_final_fase = 1
+            
+            if fase%2 == 1:
+                if fundo_pv[2].y >= 0:
+                    etapa_final_fase = 1
+            elif fase%2 == 1:
+                if fundo_grag[2].y >= -300:
+                    etapa_final_fase = 1
 
             ## PLAYER
 
@@ -312,8 +322,12 @@ while True:
                         bandejao_pv.draw()
                 ## BANDEJAO GRAG
                 elif fase%2 == 0:
-                    bandejao_grag.draw()
-                    arvores_grag.draw()
+                    if fundo_grag[1].y >= 0:
+                        bandejao_grag.draw()
+                    
+            arvores_grag.x = 0
+            arvores_grag.y = fundo_grag[2].y
+            arvores_grag.draw()
 
             ##CHUVA
             chover.set_total_duration(500)
