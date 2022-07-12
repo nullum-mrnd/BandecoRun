@@ -7,14 +7,14 @@ from PPlay.sprite import *
 
 #### Gerador de entidades:
 
-def EntitieGenerator(objetos, frames, y_inicial, x1, x2, delay):
+def EntitieGenerator(objetos, frames, y_inicial, x1, x2):
 
     lista_objeto = []
     for objeto in objetos:         
         objeto.set_curr_frame(randint(0, frames))
         objeto.x = randint(x1, x2)
         objeto.y = y_inicial
-        y_inicial -= 500
+        y_inicial -= 250
         
         lista_objeto.append(objeto)
 
@@ -23,18 +23,33 @@ def EntitieGenerator(objetos, frames, y_inicial, x1, x2, delay):
 
 #### Desenho das entidades:
 
-def EntitieDrawer(objetos, frames, y_inicial, x1, x2, limite, parada):
+def EntitieDrawer(in_game, objetos, frames, y_inicial, x1, x2, limite, parada_pv, parada_gra, fase, delay_drawer):
+    delay_drawer[0] += in_game.delta_time()
     for objeto in objetos:
-        if objeto.y > limite:
+        if objeto.y > limite and  delay_drawer[0] > 2:
             objeto.set_curr_frame(randint (0, frames-1))
-            if parada > -300:
-                x3 = 280
-                x4 = 740
-                objeto.x = randint(x3,x4)
-            elif parada < 0:
-                objeto.x = randint(x1,x2)
-            if parada < 400:
-                objeto.y = y_inicial
+            #PV
+            if fase == 1:
+                if parada_pv > -300:
+                    x3 = 290
+                    x4 = 720
+                    objeto.x = randint(x3,x4)
+                elif parada_pv < 0:
+                    objeto.x = randint(x1,x2)
+                if parada_pv < 400:
+                    objeto.y = y_inicial
+            #GRAG 
+            elif fase == 2:
+                if parada_gra > -600:
+                    x3 = 300
+                    x4 = 740
+                    objeto.x = randint(x3,x4)
+                elif parada_gra < 0:
+                    objeto.x = randint(x1,x2)
+                if parada_gra < 400:
+                    objeto.y = y_inicial
+            delay_drawer[0] = 0
+
 
         objeto.draw()      
 
@@ -67,25 +82,26 @@ def VehicleGenerator(veiculos, frames, pos_inicial):
         if aux == 2:
             veiculo.x = veiculo.width + 40
         veiculo.y = pos_inicial
-        pos_inicial -= 200
+        pos_inicial -= 2500
 
 #### Desenho dos veículos:
 
-def VehicleDrawer(veiculos, frames, limite, nova_pos_inicial, parada):
+def VehicleDrawer(tempo, in_game, delay_drawer, veiculos, frames, limite, nova_pos_inicial):
+    delay_drawer[2] += in_game.delta_time()
     for veiculo in veiculos:
-        if veiculo.y > limite:
-            aux = randint(1,3)
-            if aux == 1:
-                veiculo.x = -10
-            if aux == 2:
-                veiculo.x = veiculo.width +40
-            if aux == 3:
-                veiculo.x = veiculo.width +80
+        if veiculo.y > limite and delay_drawer[2] > 2:
             veiculo.set_curr_frame(frames)
-            if parada < -799: 
+            aux = randint(1,2)
+            if aux == 1:
+                veiculo.x = randint(-50, 80)
+            if aux == 2:
+                veiculo.x = randint(210,320)
+                
+            if tempo >= 12: 
                 veiculo.y = nova_pos_inicial
+            delay_drawer[2] = 0
         veiculo.draw()
-
+   
 
 # moedas, estudantes, carros, onibus, poça
 #   1          2         3       4     5
@@ -94,18 +110,22 @@ def VehicleDrawer(veiculos, frames, limite, nova_pos_inicial, parada):
 # lista_contadores[1] -> Moedas
 # lista_contadores[2] -> Pontos de resistência estudantes carros
 def GameObjectsPhysics(jogador, colisor, tipo, lista_contadores, delay_colision,Interface_jogo):
+    
     if type(colisor) is list:
         for objeto in colisor:
+            
             if tipo == 1:   # MOEDA
-                if Collision.collided_perfect(jogador, objeto) and (jogador.x + jogador.width - 15 > objeto.x) and (jogador.x < objeto.x + objeto.width):
+                if objeto.y > 620:
+                    objeto.unhide()
+                if Collision.collided_perfect(jogador, objeto) and (jogador.x + jogador.width - 15 > objeto.x) and (jogador.x < objeto.x + objeto.width- 25):
                     lista_contadores[1] += 1
                     objeto.hide()
+                    
                     return 0
 
 
             if tipo ==2:  #ESTUDANTES
-
-                if Collision.collided_perfect(jogador, objeto) and (jogador.x + jogador.width - 15 > objeto.x) and (jogador.x < objeto.x + objeto.width):
+                if Collision.collided_perfect(jogador, objeto) and (jogador.x + jogador.width - 15 > objeto.x) and (jogador.x < objeto.x + objeto.width-25) and (jogador.y < objeto.y + objeto.width + 5):
                     lista_contadores[0] -= 1
 
                     if lista_contadores[0] == 2:
@@ -117,24 +137,23 @@ def GameObjectsPhysics(jogador, colisor, tipo, lista_contadores, delay_colision,
                     delay_colision = 0
 
             elif tipo == 3: ## CARRO
-                if Collision.collided_perfect(jogador, objeto) and (jogador.x + jogador.width - 15 > objeto.x) and (jogador.x < objeto.x + objeto.width):
+                if Collision.collided_perfect(jogador, objeto) and (jogador.x + jogador.width - 25> objeto.x) and (jogador.x < objeto.x + objeto.width -25) and (jogador.y < objeto.y + objeto.width + 5):
                     print("bateu carro")
                     lista_contadores[0] -= 2
 
-                    lista_contadores[0] -= 2
-                    if lista_contadores[0] == 3:
+                    if lista_contadores[0] == 1:
                         Interface_jogo[2].hide()
                         Interface_jogo[1].hide()
-                    elif lista_contadores[0] == 2:
-                        Interface_jogo[1].hide()
-                        Interface_jogo[0].hide()
-                    elif lista_contadores[0] == 1:
+                    elif lista_contadores[0] == 0:
                         Interface_jogo[0].hide()
                     delay_colision = 0
     
-            elif tipo == 4: ## POÇA
+            #elif tipo == 4: ## ONIBUS
+
+            elif tipo == 5: ## POÇA
                 if Collision.collided_perfect(jogador, objeto) and (jogador.x + jogador.width - 15 > objeto.x) and (jogador.x < objeto.x + objeto.width):
-                    lista_contadores[4] = 3
+                    #lista_contadores[4] = 3
+                    delay_colision = 0
 
         return delay_colision
             # elif tipo == 5:

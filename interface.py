@@ -34,13 +34,6 @@ def CriaMoedas(pos_x_ini, pos_y):
         num.y = pos_y
     return moedas
 
-def InterfaceSair(window):
-    sair = SetObjeto(["Saida.png",1], window.width/2, window.height/2)
-    sim = SetObjeto(["Saida(sim).png",1], window.width/2.5, window.height/1.8)
-    nao = SetObjeto(["Saida(nao).png",1], window.width/1.7, window.height/1.8)
-
-    Interface = [sair, sim, nao]
-    return Interface
 
 def InterfaceMenu(window):
     jogar = SetObjeto(["Sprites/MENU/jogar.png",1], window.width/2, window.height/1.7)

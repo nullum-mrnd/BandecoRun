@@ -6,7 +6,7 @@ from PPlay.collision import *
 from PPlay.sprite import *
 from entities import *
 from interface import *
-## CAMPUS GRAG (AINDA NÃO TEM A ANIMACAO DO GRAGOATA)
+
 ## PRECISA FAZER AS FASES FUNCIONAREM, GRAGOATÁ TÁ BUGANDO
 ## JÁ DEIXEI AS SPRITES DO GRAGOATÁ EM ORDEM DE DRAW E POSIÇÃO
 ## PRECISA FAZER UMA VARIAVEL GLOBAL DE MOEDAS PRA GUARDAR O QUE VOCÊ COLETOU EM TODAS AS FASES
@@ -29,7 +29,6 @@ fundo_grag = [Sprite("Sprites/GAME/uff_grag.png",3),Sprite("Sprites/GAME/uff_gra
 # VARIAVEIS DO GAME
 game_status = 0
 tempo_recarga = 0
-delay = 0
 estado_pausa = 0
 perdeu = 0
 venceu = 0
@@ -40,7 +39,7 @@ vPlayer = 250
 
 
 ## PLAYER
-jogador = Sprite("Sprites/GAME/jogador.png", 2)
+jogador = Sprite("Sprites/GAME/jogador1.png", 3)
 jogador.x = in_game.width/2
 jogador.y = in_game.height/1.1 - jogador.height/2
 lista_contadores = [3,0,3,0,0]
@@ -48,7 +47,6 @@ lista_contadores = [3,0,3,0,0]
 ## INTERFACE
 Interface_jogo = InterfaceSet(in_game)
 Interface_jogo2 = InterfaceSet(in_game)
-Interface_saida = InterfaceSair(in_game)
 Interface_menu = InterfaceMenu(in_game)
 interface_vit = InterfaceVitoria(in_game)
 interface_derrota = InterfaceDerrota(in_game)
@@ -60,15 +58,10 @@ num_moedas = [0,0]
 
 # GERACAO DE OBJETOS
 predios = [Sprite("Sprites/GAME/predios.png",5), Sprite("Sprites/GAME/predios.png",5), Sprite("Sprites/GAME/predios.png",5), Sprite("Sprites/GAME/predios.png",5), Sprite("Sprites/GAME/predios.png",5), Sprite("Sprites/GAME/predios.png",5)]
-BuildingGenerator(predios, randint(0,4), in_game.height, randint(760, 850))
 estudantes = [Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5)]  
-EntitieGenerator(estudantes, 4, -200, in_game.width/2, 740, 1)
-moedas = [Sprite("Sprites/moeda.png", 1), Sprite("Sprites/moeda.png", 1)]
-EntitieGenerator(moedas, 1, - randint(100,600), 100, 500, 10)
-veiculos = [Sprite("Sprites/GAME/veiculos.png",5),Sprite("Sprites/GAME/veiculos.png",5),Sprite("Sprites/GAME/veiculos.png",5),Sprite("Sprites/GAME/veiculos.png",5),Sprite("Sprites/GAME/veiculos.png",5)]
-VehicleGenerator(veiculos, 4 , -500)
-poças = [Sprite("Sprites/GAME/poça.png",1),Sprite("Sprites/GAME/poça.png",1),Sprite("Sprites/GAME/poça.png",1),Sprite("Sprites/GAME/poça.png",1)]
-EntitieGenerator(poças,1,-300,0,740,-300)
+moedas = [Sprite("Sprites/moeda.png", 1)]
+veiculos = [Sprite("Sprites/GAME/veiculos.png",5),Sprite("Sprites/GAME/veiculos.png",5),Sprite("Sprites/GAME/veiculos.png",5)]
+poças = [Sprite("Sprites/GAME/poça.png",1)]
 
 
 ##COLISAO
@@ -78,12 +71,12 @@ contador = [0,1,3]
 roberto = 0
 pisou_poca = 0
 delay_colision = 4
+delay_drawer = [0, 0, 0]
 pisca_player = 0
 
 etapa_final_fase = 0
 chuva = 0
 chover = Animation("Sprites/GAME/chuva.png",3,True)
-fase = 1
 delay_menu = 2
 
 ##ITENS LOJA
@@ -95,13 +88,15 @@ pdrextra = 0
 comprou_sapato = 0
 comprou_galocha = 0
 
-fase = 2
+fase = 1
 
 ## G A M E    L O O P
 while True:
     
     # ----------- TELA MENU -----------
     if game_status == 0:
+       
+        #SETANDO PARA UMA FASE
         clima_chuva = 0
         perdeu = 0
         venceu = 0
@@ -113,6 +108,12 @@ while True:
         fundo_vet[0].y = 0
         fundo_vet[1].y = -600
         fundo_vet[2].y = -2 * 600
+        BuildingGenerator(predios, randint(0,4), in_game.height, randint(760, 850))
+        EntitieGenerator(estudantes, 4, -100, in_game.width/2, 740)
+        EntitieGenerator(moedas, 1, - -1000, 100, 500)
+        VehicleGenerator(veiculos, 4 , -1000)
+        EntitieGenerator(poças,1,-2000,0,740)
+
         
 
 
@@ -124,7 +125,7 @@ while True:
         if (click.is_over_object(Interface_menu[0]) == True ) and (click.is_button_pressed(1)) and delay_menu >= 0.3:
             jogador.set_curr_frame(0)
             ##PRAIA VERMELHA
-            if fase%2 == 1:
+            if fase == 1:
                 ## CAMPUS PV SET
                 bandejao_pv = Sprite("Sprites/GAME/bandejao_pv.png",1)
                 bandejao_pv.x = 1000 - bandejao_pv.width
@@ -136,7 +137,7 @@ while True:
                 fundo_pv[1].y = -1200
                 fundo_pv[2].y = -1800
             ## GRAGOATA
-            elif fase%2 == 0:
+            elif fase == 2:
                 ## CAMPUS GRAG SET
                 bandejao_grag = Sprite("Sprites/GAME/bandejao_grag.png",1)
                 arvores_grag = Sprite("Sprites/GAME/arvores_grag.png",1)
@@ -161,7 +162,7 @@ while True:
             
             
             ## RELOGIO
-            tempo = 10
+            tempo = 60  
             relogio = CriaRelogio(in_game)
             dez_seg = 3
             uni_seg = 0
@@ -177,8 +178,8 @@ while True:
 
             ##INTERFACE
             Interface_jogo = InterfaceSet(in_game)
-            for fundo in fundo_vet:
-                fundo.set_curr_frame(randint(0,2))
+            # for fundo in fundo_vet:
+            #     fundo.set_curr_frame(randint(0,2))
 
             game_status = 1
 
@@ -191,31 +192,32 @@ while True:
     # ----------- TELA JOGO -----------
 
     elif game_status == 1:
-
         ## ANIMAÇAO FINAL PLAYER
         if etapa_final_fase == 1:
-            if fase%2 == 1: ## CAMPUS PV
-                if fase % 2 == 1:
-                    if jogador.y > 200:
-                        jogador.move_y(-150*in_game.delta_time())
-                    if jogador.y <= 200 and jogador.x < 750:
-                        jogador.set_curr_frame(1)
-                        jogador.move_x(150*in_game.delta_time())
-                    if jogador.y <= 200 and jogador.x >= 750:
-                        venceu = 1
-
-            elif fase%2 == 0: ## CAMPUS GRAG (AINDA NÃO TEM A ANIMACAO DO GRAGOATA)
-                if jogador.x < 600:
-                    jogador.move_x(-150*in_game.delta_time())
-                elif jogador.x >= 600 and jogador.y < fundo_grag[2].y + 200:
+            if fase == 1:
+                if jogador.y > 200:
                     jogador.move_y(-150*in_game.delta_time())
+                if jogador.y <= 200 and jogador.x < 750:
+                    jogador.set_curr_frame(1)
+                    jogador.move_x(150*in_game.delta_time())
+                if jogador.y <= 200 and jogador.x >= 750:
+                    venceu = 1
+                
 
-                venceu = 1
+            elif fase == 2: ## CAMPUS GRAG (AINDA NÃO TEM A ANIMACAO DO GRAGOATA)
+                if jogador.y > 200:
+                    jogador.move_y(-150*in_game.delta_time())
+                if jogador.y <= 200 and jogador.x < 750:
+                    jogador.set_curr_frame(2)
+                    jogador.move_x(-150*in_game.delta_time())
+                if jogador.y <= 200 and jogador.x <= 200:
+                    venceu = 1
+                    
 
-        if fase%2 == 1:
+        if fase == 1:
             if fundo_pv[2].y >= 0:
                 vEntitie = 0
-        elif fase%2 == 0:
+        elif fase == 2:
             if fundo_grag[2].y >= 0:
                 vEntitie = 0
 
@@ -230,26 +232,28 @@ while True:
                         fundo.set_curr_frame(randint(0,2))
                 fundo.draw()
 
-            if int(tempo) <= 8:
-                if fase%2 == 1:
+            if fase == 1:
+                if int(tempo) <= 8:
+                
                     for fundo in fundo_pv:
                         if estado_pausa == 0:
                             fundo.y += vEntitie * in_game.delta_time()
                             bandejao_pv.y = fundo_pv[2].y
                             fundo.draw()
-                elif fase%2 == 0:
+
+            if fase == 2:
+                if int(tempo) <= 8:
                     for fundo in fundo_grag:
                         if estado_pausa == 0:
                             fundo.y += vEntitie * in_game.delta_time()
                             bandejao_grag.y = fundo_grag[2].y
                             fundo.draw()
-            
-            if fase%2 == 1:
+            if fase == 1:
                 if fundo_pv[2].y >= 0:
                     etapa_final_fase = 1
-            elif fase%2 == 1:
-                if fundo_grag[2].y >= -300:
-                    etapa_final_fase = 1
+            if fase == 2:
+                if fundo_grag[2].y >= 0:
+                     etapa_final_fase = 1
 
             ## PLAYER
 
@@ -259,85 +263,88 @@ while True:
                 if teclado.key_pressed("RIGHT") and jogador.x < 720 and etapa_final_fase == 0:
                     jogador.x += vPlayer * 2 * in_game.delta_time()
                 
-                if pisca_player > 0:
-                    pisca_player -= 1
-                if pisca_player % 2 == 1:
-                    jogador.set_curr_frame(2)
-                if pisca_player % 2 == 0:
-                    jogador.set_curr_frame(0)   
+                if etapa_final_fase != 1:
+                    if pisca_player > 0:
+                        pisca_player -= 1
+                    if pisca_player % 2 == 1:
+                        jogador.set_curr_frame(2)
+                    if pisca_player % 2 == 0:
+                        jogador.set_curr_frame(0)   
 
-                ## DESENHA POÇA
-                EntitieDrawer(poças,1,-300,0,740,600,-300)
-                for poça in poças:
-                    poça.y += vEntitie * in_game.delta_time()
+            
                 
 
                 in_game.draw_text("moedas: " + str(lista_contadores[1]),0,280,30,(255,255,255),"Arial",False,False)
-
+            
                 if etapa_final_fase == 0:
                     delay_colision += in_game.delta_time()
-                    ## ESTUDANTES
-                    EntitieDrawer(estudantes, 4, -200, in_game.width/2, 740, in_game.height, fundo_pv[0].y)
-                    #if delay_colision > 1:
-                    #   GameObjectsPhysics(jogador, estudantes, 2, lista_contadores, delay_colision, Interface_jogo)
-                    for estudante in estudantes:
-                        estudante.y += vEntitie * in_game.delta_time()
-
+                    
+                    ## POÇAS
+                    EntitieDrawer(in_game, poças,1,-700,0,740,600, fundo_pv[0].y, fundo_grag[0].y, fase, delay_drawer)
+                    for poça in poças:
+                        poça.y += vEntitie * in_game.delta_time()
+                    if delay_colision > 1:
+                        delay_colision = GameObjectsPhysics(jogador, poças, 4, lista_contadores,delay_colision,Interface_jogo)
+                    
                     ## MOEDAS
-                    EntitieDrawer(moedas, 1, -200, 100 , 740, in_game.height,fundo_pv[0].y)
+                    EntitieDrawer(in_game, moedas, 1, -1000, 100 , 740, in_game.height,fundo_pv[0].y,fundo_grag[0].y, fase, delay_drawer)
                     if delay_colision > 1.5:
                         delay_colision = GameObjectsPhysics(jogador, moedas, 1, lista_contadores, delay_colision, Interface_jogo)
-
                     for moeda in moedas:
                         moeda.y += vEntitie * in_game.delta_time()
                 
+                    ## ESTUDANTES                     
+                    EntitieDrawer(in_game, estudantes, 4, -300, in_game.width/2, 740, in_game.height, fundo_pv[0].y, fundo_grag[0].y, fase, delay_drawer)
+                    if delay_colision > 1:
+                        delay_colision = GameObjectsPhysics(jogador, estudantes, 2, lista_contadores, delay_colision, Interface_jogo)
+                    for estudante in estudantes:
+                        estudante.y += vEntitie * in_game.delta_time()
+
                     ## VEICULOS
-                    VehicleDrawer(veiculos, randint(1,4), in_game.height, -500, fundo_pv[0].y)
-                    #if delay_colision > 1:
-                    #   GameObjectsPhysics(jogador, veiculos, 3, lista_contadores, delay_colision, Interface_jogo)
+                    VehicleDrawer(int(tempo), in_game, delay_drawer, veiculos, randint(1,4), in_game.height, -1000)
+                    if delay_colision > 1:
+                        delay_colision = GameObjectsPhysics(jogador, veiculos, 3, lista_contadores, delay_colision, Interface_jogo)
                     for veiculo in veiculos:
-                        veiculo.y += vEntitie* 2 * in_game.delta_time()
+                        veiculo.y += vEntitie* 2.5 * in_game.delta_time()
                 
                     ## PREDIOS
-                    BuildingDrawer(predios, randint(0,4), in_game.height, -predios[0].height, randint(760,900), tempo)
-                    for predio in predios:
-                        predio.y += vEntitie * in_game.delta_time()
+                    # BuildingDrawer(predios, randint(0,4), in_game.height, -predios[0].height, randint(760,900), tempo)
+                    # for predio in predios:
+                    #     predio.y += vEntitie * in_game.delta_time()
 
-                    ## POÇAS
-                    #if delay_colision > 1:
-                    #   GameObjectsPhysics(jogador, poças, 4, lista_contadores,delay_colision,Interface_jogo, pisca_player)
+
                     if lista_contadores[4] > 0:
                         vPlayer = 200
                         lista_contadores[4] -= 2*in_game.delta_time()
                     else:
                         vPlayer =  250
 
+
                     
                 ##DESENHA PLAYER
                 jogador.draw()
 
                 ## BANDEJAO PV
-                if fase%2 == 1:
+                if fase == 1:
                     if fundo_pv[1].y >= 0:
                         bandejao_pv.draw()
                 ## BANDEJAO GRAG
-                elif fase%2 == 0:
+                elif fase == 2:
                     if fundo_grag[1].y >= 0:
                         bandejao_grag.draw()
                     
-            arvores_grag.x = 0
-            arvores_grag.y = fundo_grag[2].y
-            arvores_grag.draw()
+                    arvores_grag.x = 0
+                    arvores_grag.y = fundo_grag[2].y
+                    arvores_grag.draw()
 
             ##CHUVA
-            chover.set_total_duration(500)
-            chover.play()
-            chover.draw()
-            chover.update()
+            # chover.set_total_duration(500)
+            # chover.play()
+            # chover.draw()
+            # chover.update()
 
-            if estado_pausa == 0:
+            if estado_pausa == 0 and etapa_final_fase == 0:
                 ## INTERFACE
-                #print(fundo_pv[0].y)
                 if lista_contadores[0] > 0:
                     InterfaceDraw(Interface_jogo)
                 else:
@@ -459,6 +466,7 @@ while True:
             if(click.is_over_object(final[3]) == True ) and (click.is_button_pressed(1)) and prox == 1:
                 game_status = 0
                 prox = 0
+                fase += venceu
 
     elif game_status == 2:
         Interface_num_loja = InterfaceNumLoja(0 + cont3, 0 + cont4, 0 + cont5)
