@@ -8,15 +8,27 @@ def SetObjeto(sprite, pos_x, pos_y):
     objeto.y = pos_y - objeto.height/2
     return objeto
 
-def InterfaceSet(window):
+def InterfaceSet(window, cont4, galocha, sapato):
     resist1 = SetObjeto(["Sprites/GAME/ponto_de_resistencia.png", 1], window.width/40, window.height/20)
     resist2 = SetObjeto(["Sprites/GAME/ponto_de_resistencia.png", 1], resist1.width + 20, window.height/20)
     resist3 = SetObjeto(["Sprites/GAME/ponto_de_resistencia.png", 1], resist2.width + 63, window.height/20)
-    janela1 = SetObjeto(["Sprites/LOJA/sapato.png", 1], window.width/30 + 15, window.height/1.07)
+    if sapato == 1: 
+        janela1 = SetObjeto(["Sprites/LOJA/sapato.png", 1], window.width/30 + 15, window.height/1.07)
+    elif galocha == 1:
+        janela1 = SetObjeto(["Sprites/LOJA/galocha.png", 1], window.width/30 + 15, window.height/1.07)
+    else:
+        janela1 = SetObjeto(["Sprites/LOJA/pe.png", 1], window.width/30 + 15, window.height/1.07)
     janela2 = SetObjeto(["Sprites/LOJA/fantasma.png", 1], window.width/30 + 103, window.height/1.07)
     moeda_icon = SetObjeto(["Sprites/GAME/moeda.png", 1], 880, window.height/1.05)
-
-    Interface = [resist1, resist2, resist3, janela1, janela2, moeda_icon]
+    resist4 = SetObjeto(["Sprites/GAME/ponto_de_resistencia.png", 1], resist3.width + 106, window.height/20)
+    resist5 = SetObjeto(["Sprites/GAME/ponto_de_resistencia.png", 1], resist4.width + 149, window.height/20)
+    
+    if cont4 == 1:
+        Interface = [resist1, resist2, resist3, janela1, janela2, moeda_icon, resist4]
+    elif cont4 == 2:
+        Interface = [resist1, resist2, resist3, janela1, janela2, moeda_icon, resist4, resist5]
+    elif cont4 == 0:
+        Interface = [resist1, resist2, resist3, janela1, janela2, moeda_icon]
 
     return Interface
 
@@ -55,31 +67,30 @@ def InterfaceLoja(window):
     voltar = SetObjeto(["Sprites/LOJA/voltar.png",1], window.width/2, window.height/1.05)
     janela1 = SetObjeto(["Sprites/LOJA/sapato.png", 1], 120, 310)
     janela2 = SetObjeto(["Sprites/LOJA/galocha.png", 1], 220, 310)
-    janela3 = SetObjeto(["Sprites/LOJA/fantasma.png", 1], 450, 310)
+    janela3 = SetObjeto(["Sprites/LOJA/fantasma.png", 1], window.width/2, 310)
     #janela4 = SetObjeto(["Sprites/LOJA/icones.png", 1], 550, 310)
     janela5 = SetObjeto(["Sprites/LOJA/pdr.png", 1], 840, 310)
     loja = SetObjeto(["Sprites/LOJA/loja.png",1], window.width/2, window.height/7)
     sapatos = SetObjeto(["Sprites/LOJA/sapatos_titulo.png",1], 170, 250)
     power_ups = SetObjeto(["Sprites/LOJA/power_ups_titulo.png",1], window.width/2, 250)
     resist = SetObjeto(["Sprites/LOJA/pontos_de_resistencia_titulo.png",1], 840, 240)
+    moeda_icon = SetObjeto(["Sprites/GAME/moeda.png", 1], 880, window.height/1.05)
 
-
-    Interface = [voltar, janela1, janela2, janela3, janela5, loja, sapatos, power_ups, resist]
+    Interface = [voltar, janela1, janela2, janela3, janela5, loja, sapatos, power_ups, resist, moeda_icon]
 
     return Interface
 
-def InterfaceNumLoja(frame3, frame4, frame5):
+def InterfaceNumLoja(window, frame3, frame5):
     check1 = SetObjeto(["Sprites/LOJA/check.png", 1], 120, 337)
     check2 = SetObjeto(["Sprites/LOJA/check.png", 1], 220, 337)
-    num_janela3 = SetObjeto(["Sprites/LOJA/numero_pequeno.png", 10], 450, 337)
+    num_janela3 = SetObjeto(["Sprites/LOJA/numero_pequeno.png", 10], window.width/2 - 2, 337)
     num_janela3.set_curr_frame(frame3)
-    num_janela4 = SetObjeto(["Sprites/LOJA/numero_pequeno.png", 10], 550, 337)
-    num_janela4.set_curr_frame(frame4)
+    
     num_janela5 = SetObjeto(["Sprites/LOJA/numero_pequeno.png", 10], 840, 337)
     num_janela5.set_curr_frame(frame5)
 
 
-    Interface = [check1, check2, num_janela3, num_janela4, num_janela5]
+    Interface = [check1, check2, num_janela3, num_janela5]
 
     return Interface
 
