@@ -87,7 +87,7 @@ pdrextra = 0
 comprou_sapato = 0
 comprou_galocha = 0
 
-moeda_total = 0
+
 fase = 1
 
 ##SOUNDTRACK
@@ -100,6 +100,7 @@ while True:
     if recarga_musica > 222:
         som[0].play()
         recarga_musica = 0
+
     # ----------- TELA MENU -----------
     if game_status == 0:
         
@@ -109,6 +110,7 @@ while True:
         perdeu = 0
         venceu = 0
         etapa_final_fase = 0
+        prox = 0
         vEntitie = 250
         vPlayer = 250
         indice_vida_col = 1
@@ -458,10 +460,8 @@ while True:
                 pausa = Pausa(in_game)
                 InterfaceDraw(pausa)
                 if(click.is_over_object(pausa[2]) == True ) and (click.is_button_pressed(1)):
-                    som[1].play()
                     estado_pausa = 0
                 if(click.is_over_object(pausa[3]) == True ) and (click.is_button_pressed(1)):
-                    som[1].play()
                     lista_contadores[1] = 0
                     estado_pausa = 0
                     game_status = 0
@@ -469,7 +469,7 @@ while True:
                     delay_menu = 0
         
         delay_botao2 += in_game.delta_time()
-        if (venceu == 1 or perdeu == 1) and prox == 1:
+        if (venceu == 1 or perdeu == 1) and prox == 1 and tempo_recarga >= 3:
             InterfaceDraw(fundos)
             InterfaceDraw(final)
             pontos = CriaPontos(in_game.width/3 + 40, 306)
@@ -513,12 +513,8 @@ while True:
         if venceu == 1 and prox == 0 :            
             InterfaceDraw(fundos)
             InterfaceDraw(interface_vit)
-            delay_moeta_total += in_game.delta_time()
-            if delay_moeta_total > 10000:
-                moeda_total += lista_contadores[1]
-                delay_moeta_total = 0
+
             if(click.is_over_object(interface_vit[3]) == True ) and (click.is_button_pressed(1)) and delay_botao2 > 2:
-                som[1].play()
                 prox = 1
                 delay_botao2 = 0
 
@@ -528,7 +524,6 @@ while True:
             InterfaceDraw(interface_derrota)
         
             if(click.is_over_object(interface_derrota[3]) == True ) and (click.is_button_pressed(1)) and delay_botao2 > 2:
-                som[1].play()
                 prox = 1
                 delay_botao2 = 0
 
@@ -542,8 +537,8 @@ while True:
             Interface_num_loja[1].hide()
         InterfaceDraw(Interface_num_loja)
         qtd_moedas = CriaMoedas(930, 535)
-        num_moedas_loja[0] =  moeda_total - (int(moeda_total/10)*10)
-        num_moedas_loja[1] = int(moeda_total/10)
+        num_moedas_loja[0] =  lista_contadores[1] - (int(lista_contadores[1]/10)*10)
+        num_moedas_loja[1] = int(lista_contadores[1]/10)
 
         qtd_moedas[0].set_curr_frame(num_moedas_loja[0])
         qtd_moedas[1].set_curr_frame(num_moedas_loja[1])
@@ -567,35 +562,35 @@ while True:
 
         #MUDA O VALOR DA QUANTIDADE DE ITENS COMPRADOS
 
-        if (click.is_over_object(Interface_loja[1]) == True ) and (click.is_button_pressed(1)) and moeda_total >= 5 and sapato == 0:
+        if (click.is_over_object(Interface_loja[1]) == True ) and (click.is_button_pressed(1)) and lista_contadores[1] >= 5 and sapato == 0:
             som[1].play()
             sapato = 1
             galocha = 0
             if comprou_sapato == 0:
-                moeda_total -= 5
+                lista_contadores[1] -= 5
             comprou_sapato = 1
 
 
-        elif (click.is_over_object(Interface_loja[2]) == True ) and (click.is_button_pressed(1)) and moeda_total >= 5 and galocha == 0:
+        elif (click.is_over_object(Interface_loja[2]) == True ) and (click.is_button_pressed(1)) and lista_contadores[1]  >= 5 and galocha == 0:
             som[1].play()
             galocha = 1
             sapato = 0
             if comprou_galocha == 0:
-                moeda_total -= 5
+                lista_contadores[1] -= 5
             comprou_galocha = 1
 
-        elif (click.is_over_object(Interface_loja[3]) == True ) and (click.is_button_pressed(1)) and (tempo_recarga > 0.5) and (cont3 <= 2) and moeda_total >= 5 :
+        elif (click.is_over_object(Interface_loja[3]) == True ) and (click.is_button_pressed(1)) and (tempo_recarga > 0.5) and (cont3 <= 2) and lista_contadores[1]  >= 5 :
             som[1].play()
             cont3 += 1
             tempo_recarga = 0
-            moeda_total -= 5
+            lista_contadores[1] -= 5
 
 
-        elif (click.is_over_object(Interface_loja[4]) == True ) and (click.is_button_pressed(1)) and (tempo_recarga > 0.5) and (cont4 <= 1) and moeda_total >= 5 :
+        elif (click.is_over_object(Interface_loja[4]) == True ) and (click.is_button_pressed(1)) and (tempo_recarga > 0.5) and (cont4 <= 1) and lista_contadores[1]  >= 5 :
             som[1].play()
             cont4 += 1
             tempo_recarga = 0
-            moeda_total -= 5
+            lista_contadores[1] -= 5
             lista_contadores[5] = cont4
 
     elif game_status == 3:
