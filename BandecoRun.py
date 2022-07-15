@@ -93,7 +93,6 @@ fase = 1
 ##SOUNDTRACK
 recarga_musica = 230
 som = Audio()
-print_recarga = 0
 ## G A M E    L O O P
 while True:
     tempo_recarga += in_game.delta_time()
@@ -101,12 +100,6 @@ while True:
     if recarga_musica > 222:
         som[0].play()
         recarga_musica = 0
-
-    print_recarga += in_game.delta_time()
-    if print_recarga > 5:
-        print("perdeu:", perdeu)
-        print("venceu:", venceu)
-        print("prox:", prox)
     # ----------- TELA MENU -----------
     if game_status == 0:
         
@@ -465,8 +458,10 @@ while True:
                 pausa = Pausa(in_game)
                 InterfaceDraw(pausa)
                 if(click.is_over_object(pausa[2]) == True ) and (click.is_button_pressed(1)):
+                    som[1].play()
                     estado_pausa = 0
                 if(click.is_over_object(pausa[3]) == True ) and (click.is_button_pressed(1)):
+                    som[1].play()
                     lista_contadores[1] = 0
                     estado_pausa = 0
                     game_status = 0
@@ -498,6 +493,7 @@ while True:
 
             if(click.is_over_object(final[3]) == True ) and (click.is_button_pressed(1)) and prox == 1 and delay_botao2 > 2:
                 game_status = 0
+                som[1].play()
                 som[0].set_volume(50)
                 prox = 0
                 fase += venceu
@@ -522,6 +518,7 @@ while True:
                 moeda_total += lista_contadores[1]
                 delay_moeta_total = 0
             if(click.is_over_object(interface_vit[3]) == True ) and (click.is_button_pressed(1)) and delay_botao2 > 2:
+                som[1].play()
                 prox = 1
                 delay_botao2 = 0
 
@@ -531,6 +528,7 @@ while True:
             InterfaceDraw(interface_derrota)
         
             if(click.is_over_object(interface_derrota[3]) == True ) and (click.is_button_pressed(1)) and delay_botao2 > 2:
+                som[1].play()
                 prox = 1
                 delay_botao2 = 0
 
