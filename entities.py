@@ -64,7 +64,7 @@ def EntitieDrawer(in_game, objetos, frames, y_inicial, x1, x2, limite, parada_pv
 def VehicleGenerator(veiculos, frames, pos_inicial):
     for i in range(0,4):
         if i != 3:
-            veiculos[i].set_curr_frame(randint(0, frames))
+            veiculos[i].set_curr_frame(randint(0, frames-1))
             aux = randint(1,2)
             if aux == 1:
                 veiculos[i].x = -10
@@ -97,7 +97,7 @@ def VehicleDrawer(tempo, in_game, delay_drawer, veiculos, frames, limite, nova_p
                 if aux == 2:
                     veiculos[i].x = randint(210,320)
                     
-                if tempo >= 12: 
+                if tempo >= 15: 
                     veiculos[i].y = nova_pos_inicial
                 delay_drawer[2] = 0
         else:
@@ -109,7 +109,7 @@ def VehicleDrawer(tempo, in_game, delay_drawer, veiculos, frames, limite, nova_p
                 if aux == 2:
                     veiculos[i].x = randint(210,320)
                     
-                if tempo >= 12: 
+                if tempo >= 15: 
                     veiculos[i].y = nova_pos_inicial
                 delay_drawer[2] = 0
         veiculos[i].draw()
@@ -126,7 +126,7 @@ def GameObjectsPhysics(jogador, colisor, tipo, lista_contadores, delay_colision,
         for objeto in colisor:
             
             if tipo == 1:   # MOEDA
-                if objeto.y > 620:
+                if objeto.y > -1000:
                     objeto.unhide()
                 if Collision.collided_perfect(jogador, objeto) and (jogador.x + jogador.width - 15 > objeto.x) and (jogador.x < objeto.x + objeto.width- 25):
                     som[2].play()

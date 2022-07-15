@@ -78,8 +78,9 @@ def InterfaceLoja(window):
     power_ups = SetObjeto(["Sprites/LOJA/power_ups_titulo.png",1], window.width/2, 250)
     resist = SetObjeto(["Sprites/LOJA/pontos_de_resistencia_titulo.png",1], 840, 240)
     moeda_icon = SetObjeto(["Sprites/GAME/moeda.png", 1], 880, window.height/1.05)
+    valor =SetObjeto(["Sprites/LOJA/valor.png", 1], window.width/2, window.height/4)
 
-    Interface = [voltar, janela1, janela2, janela3, janela5, loja, sapatos, power_ups, resist, moeda_icon]
+    Interface = [voltar, janela1, janela2, janela3, janela5, loja, sapatos, power_ups, resist, moeda_icon, valor]
 
     return Interface
 

@@ -10,12 +10,6 @@ from PPlay.sound import *
 from entities import *
 from interface import *
 
-## FASES 3 E 4
-## AUDIO
-
-## COMENTARIO: Criei uma nova sprite para quando n estiver nem com o sapato e nem com a galocha.
-#Se quiser fazer pés mais bonitos fique a vontade, peguei esses do google.
-
 in_game = Window(1000, 600)
 in_game.set_title("BandecoRun")
 fundo_vet = [Sprite("Sprites/GAME/ruas.png",3),Sprite("Sprites/GAME/ruas.png",3),Sprite("Sprites/GAME/ruas.png",3)]
@@ -64,7 +58,7 @@ predios = Sprite("Sprites/GAME/predios.png",2)
 estudantes = [Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5),Sprite("Sprites/GAME/estudantes.png",5)]  
 moedas = [Sprite("Sprites/moeda.png", 1)]
 veiculos = [Sprite("Sprites/GAME/carros.png",4),Sprite("Sprites/GAME/carros.png",4),Sprite("Sprites/GAME/carros.png",4), onibus]
-poças = [Sprite("Sprites/GAME/poça.png",1)]
+poças = [Sprite("Sprites/GAME/poça.png",1), Sprite("Sprites/GAME/poça.png",1)]
 
 
 ##COLISAO
@@ -77,6 +71,7 @@ delay_fantasma = 4
 delay_fantasma2 = 0
 delay_moeta_total = 10001
 delay_botao = 2
+delay_botao2 = 0
 
 etapa_final_fase = 0
 chuva = 0
@@ -93,16 +88,25 @@ comprou_sapato = 0
 comprou_galocha = 0
 
 moeda_total = 0
-fase = 2
+fase = 1
 
 ##SOUNDTRACK
-
+recarga_musica = 230
 som = Audio()
-som[0].play()
-
+print_recarga = 0
 ## G A M E    L O O P
 while True:
     tempo_recarga += in_game.delta_time()
+    recarga_musica += in_game.delta_time()
+    if recarga_musica > 222:
+        som[0].play()
+        recarga_musica = 0
+
+    print_recarga += in_game.delta_time()
+    if print_recarga > 5:
+        print("perdeu:", perdeu)
+        print("venceu:", venceu)
+        print("prox:", prox)
     # ----------- TELA MENU -----------
     if game_status == 0:
         
@@ -121,6 +125,7 @@ while True:
         fundo_vet[0].y = 0
         fundo_vet[1].y = -600
         fundo_vet[2].y = -2 * 600
+
         EntitieGenerator(estudantes, 4, -100, in_game.width/2, 740)
         EntitieGenerator(moedas, 0, - -1000, 100, 500)
         VehicleGenerator(veiculos, 4, -1000)
@@ -209,7 +214,7 @@ while True:
     # ----------- TELA JOGO -----------
 
     elif game_status == 1:
-        som[0].set_volume(10)
+        som[0].set_volume(30)
         ## ANIMAÇAO FINAL PLAYER
         if etapa_final_fase == 1:
             if fase == 1 or fase == 3:
@@ -221,9 +226,10 @@ while True:
                     jogador.move_x(150*in_game.delta_time())
                 if jogador.y <= 200 and jogador.x >= 750:
                     venceu = 1
+                print(venceu)
                 
 
-            elif fase == 2 or fase == 4: ## CAMPUS GRAG (AINDA NÃO TEM A ANIMACAO DO GRAGOATA)
+            elif fase == 2 or fase == 4: 
                 jogador.set_curr_frame(0)
                 if jogador.y > 200:
                     jogador.move_y(-150*in_game.delta_time())
@@ -276,7 +282,6 @@ while True:
             if fase == 1 or fase == 3:
                 if fundo_pv.y >= 0:
                     etapa_final_fase = 1
-                    print(distance)
             if fase == 2 or fase == 4:
                 if fundo_grag.y >= 0:
                     etapa_final_fase = 1
@@ -299,8 +304,6 @@ while True:
                     else:
                         jogador.set_curr_frame(0)
 
-                
-                #in_game.draw_text("moedas: " + str(lista_contadores[1]),0,280,30,(255,255,255),"Arial",False,False)
             
                 if etapa_final_fase == 0:
                     delay_colision += in_game.delta_time()
@@ -381,8 +384,9 @@ while True:
                     arvores_grag.x = 0 
                     arvores_grag.y = fundo_grag.y
                     arvores_grag.draw()
-            if fase > 2:
+            
             ##CHUVA
+            if fase > 2:
                 chover.set_total_duration(500)
                 chover.play()
                 chover.draw()
@@ -469,12 +473,7 @@ while True:
                     som[0].set_volume(50)
                     delay_menu = 0
         
-
-        ##DEBUG
-        #in_game.draw_text("game status:" + str(game_status),0,50,30,(255,255,255),"Arial",False,False)
-        #in_game.draw_text("vidas:" + str(lista_contadores[0]),0,80,30,(255,255,255),"Arial",False,False)
-        #in_game.draw_text("TEMPO:" + str(int(tempo)),0,100,30,(255,255,255),"Arial",False,False)
-
+        delay_botao2 += in_game.delta_time()
         if (venceu == 1 or perdeu == 1) and prox == 1:
             InterfaceDraw(fundos)
             InterfaceDraw(final)
@@ -483,14 +482,6 @@ while True:
                 pontos[-i].set_curr_frame(int(str(int(score))[-i]))
             for num in pontos:
                 num.draw()
-            
-            ## HIGHSCORE
-            if venceu == 1:
-                for i in range(3):
-                    if score > int(ranking[i][1]) and highscore == 0:
-                        ranking[i][1] = score
-                        highscore = 1
-                        break
         
             qtd_moedas = CriaMoedas(2*(in_game.width/3) + 40,306)
             num_moedas[0] = lista_contadores[1] - (int(lista_contadores[1]/10)*10)
@@ -504,17 +495,25 @@ while True:
 
             if num_moedas[1] == 0:
                 qtd_moedas[1].hide()
-            
 
-
-            if(click.is_over_object(final[3]) == True ) and (click.is_button_pressed(1)) and prox == 1:
+            if(click.is_over_object(final[3]) == True ) and (click.is_button_pressed(1)) and prox == 1 and delay_botao2 > 2:
                 game_status = 0
-                som[0].play()
+                som[0].set_volume(50)
                 prox = 0
                 fase += venceu
+                delay_botao2 = 0
+
+            ## HIGHSCORE
+        if venceu == 1:
+            for i in range(3):
+                if score > int(ranking[i][1]) and highscore == 0:
+                    ranking[i][1] = score
+                    highscore = 1
+                    break
                 
                 
         ## FINAL DO JOGO
+        delay_botao2 += in_game.delta_time()
         if venceu == 1 and prox == 0 :            
             InterfaceDraw(fundos)
             InterfaceDraw(interface_vit)
@@ -522,19 +521,20 @@ while True:
             if delay_moeta_total > 10000:
                 moeda_total += lista_contadores[1]
                 delay_moeta_total = 0
-            if(click.is_over_object(interface_vit[3]) == True ) and (click.is_button_pressed(1)):
+            if(click.is_over_object(interface_vit[3]) == True ) and (click.is_button_pressed(1)) and delay_botao2 > 2:
                 prox = 1
+                delay_botao2 = 0
 
         if perdeu == 1 and prox == 0:    
             lista_contadores[1] = 0        
             InterfaceDraw(fundos)
             InterfaceDraw(interface_derrota)
         
-            if(click.is_over_object(interface_derrota[3]) == True ) and (click.is_button_pressed(1)):
+            if(click.is_over_object(interface_derrota[3]) == True ) and (click.is_button_pressed(1)) and delay_botao2 > 2:
                 prox = 1
+                delay_botao2 = 0
 
     elif game_status == 2:
-        moeda_total = 10
         Interface_num_loja = InterfaceNumLoja(in_game, 0 + cont3, 0 + cont4)
         InterfaceDraw(fundos)
         InterfaceDraw(Interface_loja)
