@@ -1,6 +1,7 @@
 from random import randint
 from PPlay.window import *
 from PPlay.sprite import *
+from PPlay.sound import *
 
 def SetObjeto(sprite, pos_x, pos_y):
     objeto = Sprite(sprite[0],sprite[1])
@@ -9,26 +10,27 @@ def SetObjeto(sprite, pos_x, pos_y):
     return objeto
 
 def InterfaceSet(window, cont4, galocha, sapato):
-    resist1 = SetObjeto(["Sprites/GAME/ponto_de_resistencia.png", 1], window.width/40, window.height/20)
-    resist2 = SetObjeto(["Sprites/GAME/ponto_de_resistencia.png", 1], resist1.width + 20, window.height/20)
-    resist3 = SetObjeto(["Sprites/GAME/ponto_de_resistencia.png", 1], resist2.width + 63, window.height/20)
     if sapato == 1: 
         janela1 = SetObjeto(["Sprites/LOJA/sapato.png", 1], window.width/30 + 15, window.height/1.07)
     elif galocha == 1:
         janela1 = SetObjeto(["Sprites/LOJA/galocha.png", 1], window.width/30 + 15, window.height/1.07)
     else:
-        janela1 = SetObjeto(["Sprites/LOJA/pe.png", 1], window.width/30 + 15, window.height/1.07)
+        janela1 = SetObjeto(["Sprites/LOJA/icones.png", 1], window.width/30 + 15, window.height/1.07)
     janela2 = SetObjeto(["Sprites/LOJA/fantasma.png", 1], window.width/30 + 103, window.height/1.07)
     moeda_icon = SetObjeto(["Sprites/GAME/moeda.png", 1], 880, window.height/1.05)
+
+    resist1 = SetObjeto(["Sprites/GAME/ponto_de_resistencia.png", 1], window.width/40, window.height/20)
+    resist2 = SetObjeto(["Sprites/GAME/ponto_de_resistencia.png", 1], resist1.width + 20, window.height/20)
+    resist3 = SetObjeto(["Sprites/GAME/ponto_de_resistencia.png", 1], resist2.width + 63, window.height/20)
     resist4 = SetObjeto(["Sprites/GAME/ponto_de_resistencia.png", 1], resist3.width + 106, window.height/20)
     resist5 = SetObjeto(["Sprites/GAME/ponto_de_resistencia.png", 1], resist4.width + 149, window.height/20)
     
-    if cont4 == 1:
-        Interface = [resist1, resist2, resist3, janela1, janela2, moeda_icon, resist4]
+    if cont4 == 0:
+        Interface = [janela1, janela2, moeda_icon, resist1, resist2, resist3,]
+    elif cont4 == 1:
+        Interface = [janela1, janela2, moeda_icon, resist1, resist2, resist3, resist4]
     elif cont4 == 2:
-        Interface = [resist1, resist2, resist3, janela1, janela2, moeda_icon, resist4, resist5]
-    elif cont4 == 0:
-        Interface = [resist1, resist2, resist3, janela1, janela2, moeda_icon]
+        Interface = [janela1, janela2, moeda_icon, resist1, resist2, resist3, resist4, resist5]
 
     return Interface
 
@@ -55,11 +57,12 @@ def InterfaceMenu(window):
     tecla_a = SetObjeto(["Sprites/MENU/tecla_a.png",1], window.width/10 - 30, window.height/1.3 + 5)
     tecla_d = SetObjeto(["Sprites/MENU/tecla_d.png",1], window.width/10 + 30, window.height/1.3 + 5)
     power_ups = SetObjeto(["Sprites/MENU/power_ups.png",1], window.width/10, window.height/1.15)
-    tecla_1 = SetObjeto(["Sprites/MENU/tecla_1.png",1], window.width/10 - 30, window.height/1.1 + 10)
-    tecla_2 = SetObjeto(["Sprites/MENU/tecla_2.png",1], window.width/10 + 30, window.height/1.1 + 10)
+    tecla_1 = SetObjeto(["Sprites/MENU/tecla_1.png",1], window.width/10 , window.height/1.1 + 10)
+    #tecla_2 = SetObjeto(["Sprites/MENU/tecla_2.png",1], window.width/10 + 30, window.height/1.1 + 10)
     bandeco_logo = SetObjeto(["Sprites/MENU/logo_bandeco.png",1], window.width/2, window.height/4)
+    ranking = SetObjeto(["Sprites/MENU/ranking.png",1], window.width/2, window.height/1.26 )
 
-    Interface = [jogar, loja, creditos, controladores, tecla_a, tecla_d, power_ups, tecla_1, tecla_2, bandeco_logo]
+    Interface = [jogar, loja, creditos, controladores, tecla_a, tecla_d, power_ups, tecla_1, bandeco_logo, ranking]
 
     return Interface
 
@@ -79,6 +82,18 @@ def InterfaceLoja(window):
     Interface = [voltar, janela1, janela2, janela3, janela5, loja, sapatos, power_ups, resist, moeda_icon]
 
     return Interface
+
+def InterfaceDescr_loja(window):
+    desc_janela1 = SetObjeto(["Sprites/LOJA/allstar_desc.png",1], window.width/2, 310)
+    desc_janela2 = SetObjeto(["Sprites/LOJA/galochas_desc.png",1], window.width/2, 310)
+    desc_janela3 = SetObjeto(["Sprites/LOJA/fantasma_desc.png",1], window.width/2, 310)
+    desc_janela4 = SetObjeto(["Sprites/LOJA/pdr_desc.png",1],  window.width/2, 310)
+
+    Interface = [desc_janela1, desc_janela2, desc_janela3, desc_janela4]
+
+    return Interface
+
+
 
 def InterfaceNumLoja(window, frame3, frame5):
     check1 = SetObjeto(["Sprites/LOJA/check.png", 1], 120, 337)
@@ -130,17 +145,17 @@ def Final_da_fase(window):
     fase = SetObjeto(["Sprites/GAME/fase.png",1], window.width/2, 200)
     pontuacao = SetObjeto(["Sprites/GAME/sua_pontuacao.png",1], window.width/4, 300)
     moedas = SetObjeto(["Sprites/GAME/moedas_recolhidas.png",1], 3*(window.width/4), 300)
-    menu_botao = SetObjeto(["Sprites/GAME/menu_principal.png",1], window.width/2, 500)
+    menu_botao = SetObjeto(["Sprites/GAME/menu_principal.png",1], window.width/2, 550)
     return [fase, pontuacao, moedas, menu_botao]
 
 def CriaPontos(pos_x_ini, pos_y):
     pontos = [Sprite("Sprites/GAME/numero.png",10), Sprite("Sprites/GAME/numero.png",10), Sprite("Sprites/GAME/numero.png",10), Sprite("Sprites/GAME/numero.png",10), Sprite("Sprites/GAME/numero.png",10), Sprite("Sprites/GAME/numero.png",10)]
-    pontos[0].x = pos_x_ini - pontos[0].width
-    pontos[1].x = pontos[0].x - 40
-    pontos[2].x = pontos[1].x - 40
-    pontos[3].x = pontos[2].x - 40
-    pontos[4].x = pontos[3].x - 40
-    pontos[5].x = pontos[4].x - 40
+    pontos[5].x = pos_x_ini - pontos[0].width
+    pontos[4].x = pontos[5].x - 40
+    pontos[3].x = pontos[4].x - 40
+    pontos[2].x = pontos[3].x - 40
+    pontos[1].x = pontos[2].x - 40
+    pontos[0].x = pontos[1].x - 40
     for ponto in pontos:
         ponto.y = pos_y
 
@@ -153,3 +168,21 @@ def Pausa (window):
     menu_botao = SetObjeto(["Sprites/GAME/menu_principal.png",1], window.width/2, 350)
     
     return [fade, pause_titulo, continuar_botao, menu_botao]
+
+
+def Audio():
+    opening = Sound("Audio/Opening.OGG")
+    opening.set_volume(50)
+    click_som = Sound("Audio/click.OGG")
+    click_som.set_volume(100)
+    moeda_som = Sound("Audio/Moeda.OGG")
+    moeda_som.set_volume(100)
+    jogador_estudante = Sound("Audio/Batida_jogador.ogg")
+    jogador_estudante.set_volume(100)
+    jogador_veiculo = Sound("Audio/Jogador_veiculo.ogg")
+    jogador_veiculo.set_volume(70)
+    poca = Sound("Audio/Poca.ogg")
+    poca.set_volume(80)
+    lista = [opening, click_som, moeda_som, jogador_estudante, jogador_veiculo, poca]
+
+    return lista

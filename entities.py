@@ -2,6 +2,10 @@ from random import randint
 from PPlay.collision import *
 from PPlay.window import *
 from PPlay.sprite import *
+from PPlay.sound import *
+
+#SONS
+
 
 ## ENTIDADES:
 
@@ -27,9 +31,9 @@ def EntitieDrawer(in_game, objetos, frames, y_inicial, x1, x2, limite, parada_pv
     delay_drawer[0] += in_game.delta_time()
     for objeto in objetos:
         if objeto.y > limite and  delay_drawer[0] > 2:
-            objeto.set_curr_frame(randint (0, frames-1))
+            objeto.set_curr_frame(randint(0, frames))
             #PV
-            if fase == 1:
+            if fase == 1 or fase == 3:
                 if parada_pv > -300:
                     x3 = 290
                     x4 = 720
@@ -39,7 +43,7 @@ def EntitieDrawer(in_game, objetos, frames, y_inicial, x1, x2, limite, parada_pv
                 if parada_pv < 400:
                     objeto.y = y_inicial
             #GRAG 
-            elif fase == 2:
+            elif fase == 2 or fase == 4:
                 if parada_gra > -600:
                     x3 = 300
                     x4 = 740
@@ -52,22 +56,6 @@ def EntitieDrawer(in_game, objetos, frames, y_inicial, x1, x2, limite, parada_pv
 
 
         objeto.draw()      
-
-
-def BuildingGenerator(objetos, frames, pos_inicial, area):
-    for objeto in objetos:         
-        objeto.set_curr_frame(frames)
-        objeto.x = area
-        objeto.y = pos_inicial
-        pos_inicial -= 200
-
-def BuildingDrawer(predios, frames, limite, pos_inicial, area, tempo):
-    for i in range (5,0,-1):
-        if predios[i].y > limite and tempo >=12:
-            predios[i].x = area
-            predios[i].set_curr_frame(frames)
-            predios[i].y = pos_inicial
-        predios[i].draw()
 
 ## VEICULOS:
 
@@ -93,6 +81,7 @@ def VehicleGenerator(veiculos, frames, pos_inicial):
                 veiculos[i].x = veiculos[i].width + 40
             veiculos[i].y = pos_inicial
             pos_inicial -= 2500
+
 #### Desenho dos veículos:
 
 def VehicleDrawer(tempo, in_game, delay_drawer, veiculos, frames, limite, nova_pos_inicial):
@@ -131,7 +120,7 @@ def VehicleDrawer(tempo, in_game, delay_drawer, veiculos, frames, limite, nova_p
 # lista_contadores[0] -> Pontos de resistência estudantes
 # lista_contadores[1] -> Moedas
 # lista_contadores[2] -> Pontos de resistência estudantes carros
-def GameObjectsPhysics(jogador, colisor, tipo, lista_contadores, delay_colision,delay_moeda, Interface_jogo):
+def GameObjectsPhysics(jogador, colisor, tipo, lista_contadores, delay_colision,delay_moeda, Interface_jogo, indice_vida_col, som, score):
     pisca_player = 0
     if type(colisor) is list:
         for objeto in colisor:
@@ -140,9 +129,10 @@ def GameObjectsPhysics(jogador, colisor, tipo, lista_contadores, delay_colision,
                 if objeto.y > 620:
                     objeto.unhide()
                 if Collision.collided_perfect(jogador, objeto) and (jogador.x + jogador.width - 15 > objeto.x) and (jogador.x < objeto.x + objeto.width- 25):
+                    som[2].play()
                     lista_contadores[1] += 1
                     objeto.hide()
-                    
+                    score += 50
                     delay_colision = 0
                     pisca_player = pisca_player
                     delay_moeda = 0
@@ -151,68 +141,46 @@ def GameObjectsPhysics(jogador, colisor, tipo, lista_contadores, delay_colision,
 
             if tipo ==2:  #ESTUDANTES
                 if Collision.collided_perfect(jogador, objeto) and (jogador.x + jogador.width - 15 > objeto.x) and (jogador.x < objeto.x + objeto.width-25) and (jogador.y < objeto.y + objeto.width + 5):
-                    
+                    som[3].play()
+                    score -= 24
                     lista_contadores[0] -= 1
-                    #3 VIDAS
-                    if lista_contadores[5] == 0:
-                        if lista_contadores[0] == 2:
-                            Interface_jogo.pop(2)
-                        elif lista_contadores[0] == 1:
-                            Interface_jogo.pop(1)
-                        elif lista_contadores[0] == 0:
-                            Interface_jogo.pop(0)
-                    #4 VIDAS
-                    if lista_contadores[5] == 1:
-                        if lista_contadores[0] == 3:
-                            Interface_jogo.pop(6)
-                        elif lista_contadores[0] == 2:
-                            Interface_jogo.pop(2)
-                        elif lista_contadores[0] == 1:
-                            Interface_jogo.pop(1)
-                        elif lista_contadores[0] == 0:
-                            Interface_jogo.pop(0)
-                    #5 VIDAS
-                    if lista_contadores[5] == 2:
-                        print("foi2")
-                        if lista_contadores[0] == 4:
-                            Interface_jogo.pop(7)
-                        elif lista_contadores[0] == 3:
-                            Interface_jogo.pop(6)
-                        elif lista_contadores[0] == 2:
-                            Interface_jogo.pop(2)
-                        elif lista_contadores[0] == 1:
-                            Interface_jogo.pop(1)
-                        elif lista_contadores[0] == 0:
-                            Interface_jogo.pop(0)
+                    if indice_vida_col <= len(Interface_jogo) - 3:
+                        Interface_jogo[-indice_vida_col].hide()
+                        indice_vida_col += 1
                     delay_colision = 0
                     pisca_player = 200
                     delay_moeda = delay_moeda
 
             elif tipo == 3: ## CARRO
                 if Collision.collided_perfect(jogador, objeto) and (jogador.x + jogador.width - 50> objeto.x) and (jogador.x < objeto.x + objeto.width -50) and (jogador.y + jogador.height > objeto.y) and (jogador.y < objeto.y + 173):
-                    print("bateu carro")
-                    lista_contadores[0] -= 2
-
-                    if lista_contadores[0] == 1:
-                        Interface_jogo[2].hide()
-                        Interface_jogo[1].hide()
-                    elif lista_contadores[0] == 0:
-                        Interface_jogo[0].hide()
-                    delay_colision = 0
-                    pisca_player = 200
-                    delay_moeda = delay_moeda
-    
-            #elif tipo == 4: ## ONIBUS
+                    som[4].play()
+                    if objeto.height == 173:
+                        score -= 37
+                        lista_contadores[0] -= 2
+                        if indice_vida_col <= len(Interface_jogo) - 3:
+                            for i in range(indice_vida_col,indice_vida_col + 2):
+                                Interface_jogo[-i].hide()
+                                indice_vida_col += 1
+                        delay_colision = 0
+                        pisca_player = 200
+                        delay_moeda = delay_moeda
+                    if objeto.height == 365:
+                        score -= 157
+                        lista_contadores[0] -= 3
+                        if indice_vida_col <= len(Interface_jogo) - 3:
+                            for i in range(indice_vida_col,indice_vida_col + 3):
+                                Interface_jogo[-i].hide()
+                                indice_vida_col += 1
+                        delay_colision = 0
+                        pisca_player = 200
+                        delay_moeda = delay_moeda
 
             elif tipo == 5: ## POÇA
                 if Collision.collided_perfect(jogador, objeto) and (jogador.x + jogador.width - 15 > objeto.x) and (jogador.x < objeto.x + objeto.width):
-                    print("poça")
-                    lista_contadores[4] = 3
+                    som[5].play()
+                    lista_contadores[4] = 5
                     delay_colision = 0
-                    pisca_player = 200
+                    pisca_player = 0
                     delay_moeda = delay_moeda 
 
-        return [delay_colision, pisca_player, delay_moeda]
-            # elif tipo == 5:
-            #     if Collision.collided_perfect(jogador, objeto) and (jogador.x + jogador.width - 15 > objeto.x) and (jogador.x < objeto.x + objeto.width):
-            #         lista_contadores[2] = 1
+        return [delay_colision, pisca_player, delay_moeda, indice_vida_col, score]
